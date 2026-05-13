@@ -1,0 +1,303 @@
+/* ===== ROOT ===== */
+:root {
+
+    --happy: #B9E3EB;
+    --sad: #1B3044;
+    --fear: #C5B9D7;
+    --anger: #C6738D;
+
+    --bg-top: #0f172a;
+    --bg-bottom: #1e293b;
+}
+
+/* ===== GLOBAL ===== */
+*{
+    box-sizing: border-box;
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body{
+
+    font-family: 'Segoe UI', sans-serif;
+
+    background:
+        radial-gradient(circle at top, #334155 0%, transparent 35%),
+        linear-gradient(to bottom, #0f172a, #1e293b);
+
+    transition: opacity 0.5s ease;
+}
+
+/* ===== GAME CONTAINER ===== */
+.game-container{
+
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+}
+
+/* ===== BACKGROUND ===== */
+.sky-bg{
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.08), transparent 20%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.05), transparent 20%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.04), transparent 25%);
+}
+
+/* ===== LOGO CENTER ===== */
+.logo-container{
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 90%;
+
+    text-align: center;
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+.mood-logo{
+
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: clamp(24px, 5vw, 72px);
+
+    margin: 0;
+
+    letter-spacing: 0.3vw;
+}
+
+.mood-text{
+
+    background: linear-gradient(
+        to bottom,
+        #ffe27a 00%,
+        #ffc94d 70%,
+        #f59e0b 100%
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    -webkit-text-stroke: 1px white;
+}
+
+.sub-title{
+
+    margin-top: 2vh;
+
+    font-size: clamp(10px, 1.5vw, 16px);
+
+    color: rgba(255,255,255,0.75);
+
+    letter-spacing: 1px;
+}
+
+/* ===== CHARACTER WRAPPER ===== */
+.character-wrapper{
+
+    position: absolute;
+
+    bottom: 4vh;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+
+    z-index: 5;
+}
+
+/* ===== MASKOT ===== */
+.character{
+
+    width: min(32vw, 300px);
+
+    height: auto;
+
+    display: block;
+
+    object-fit: contain;
+
+    margin-bottom: -100px;
+
+    transition: transform 0.35s ease, filter 0.35s ease;
+
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.35));
+}
+
+.character.zoom{
+
+    transform: scale(1.08);
+}
+
+/* ===== THOUGHT BUBBLE ===== */
+.thought-bubble{
+
+    position: absolute;
+
+    top: 10%;
+    left: 60%;
+
+    width: min(40vw, 240px);
+
+    padding: 2vh;
+
+    background: rgba(255,255,255,0.95);
+
+    color: #1e293b;
+
+    border-radius: 2vw;
+
+    font-family: 'Press Start 2P', cursive;
+
+    font-size: clamp(8px, 1.2vw, 12px);
+
+    line-height: 1.8;
+
+    opacity: 0;
+
+    transform: translateY(10px) scale(0.95);
+
+    transition: 0.3s ease;
+
+    z-index: 20;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.thought-bubble.show{
+
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+}
+
+/* Bubble tail */
+.thought-bubble::before,
+.thought-bubble::after{
+
+    content: "";
+
+    position: absolute;
+
+    background: rgba(255,255,255,0.95);
+
+    border-radius: 50%;
+}
+
+.thought-bubble::before{
+
+    left: -14px;
+    bottom: 25px;
+
+    width: 24px;
+    height: 24px;
+}
+
+.thought-bubble::after{
+
+    left: -28px;
+    bottom: 12px;
+
+    width: 12px;
+    height: 12px;
+}
+
+/* ===== EMOTES ===== */
+.emote{
+
+    position: absolute;
+
+    width: min(15vw, 140px);
+    height: min(15vw, 140px);
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    z-index: 10;
+}
+
+.emote img{
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+.emote:hover{
+
+    transform: scale(1.2);
+
+    filter: drop-shadow(0 0 25px rgba(255,255,255,0.25));
+}
+
+/* ===== RESPONSIVE FIX ===== */
+@media (max-width: 768px){
+
+    .logo-container{
+        top: 30%;
+    }
+
+    .mood-text{
+        font-size: 14vw;
+    }
+
+    .character{
+        width: 60vw;
+        margin-bottom: -30px;
+    }
+
+    .thought-bubble{
+        left: 55%;
+        top: 5%;
+        width: 60vw;
+    }
+
+    .instruction{
+        font-size: 3.5vw;
+    }
+
+    .sub-title{
+        font-size: 4vw;
+    }
+
+    .emote{
+        width: 22vw;
+        height: 22vw;
+    }
+}

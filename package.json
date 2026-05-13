@@ -1,0 +1,10 @@
+{
+  "name": "project-game-jess",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "vite": "^7.0.0"
+  }
+}

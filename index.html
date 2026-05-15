@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -8,70 +9,79 @@
 
     <link rel="stylesheet" href="../css/index-style.css">
 
-    <!-- Font -->
+    <!-- FONT -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 </head>
 
-<!-- CHAT BUTTON -->
-<div class="chat-toggle" id="chatToggle">
-    💬
-</div>
+<body>
 
-<!-- CHAT BOX -->
-<div class="chat-box" id="chatBox">
-
-    <div class="chat-header">
-        MoodAI 🌙
+    <!-- CHAT BUTTON -->
+    <div class="chat-toggle" id="chatToggle">
+        💬
     </div>
 
-    <div class="chat-messages" id="chatMessages">
+    <!-- CHAT BOX -->
+    <div class="chat-box" id="chatBox">
 
-        <div class="ai-message">
-            Haiii 👋 Aku MoodAI, cerita aja ya~
+        <div class="chat-header">
+            MoodAI 🌙
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+
+            <div class="ai-message">
+                Haiii 👋 Aku MoodAI, cerita aja ya~
+            </div>
+
+        </div>
+
+        <div class="chat-input-area">
+
+            <input 
+                type="text" 
+                id="chatInput" 
+                placeholder="Ketik pesan..."
+            >
+
+            <button id="sendBtn">➤</button>
+
         </div>
 
     </div>
 
-    <div class="chat-input-area">
-
-        <input 
-            type="text" 
-            id="chatInput" 
-            placeholder="Ketik pesan..."
-        >
-
-        <button id="sendBtn">➤</button>
-
-    </div>
-
-</div>
-
-<body>
-
+    <!-- GAME -->
     <div class="game-container">
 
+        <!-- BACKGROUND -->
         <div class="sky-bg"></div>
 
         <!-- LOGO -->
         <div class="logo-container">
+
             <h1 class="mood-logo">
-                <span class="mood-text">Mood Quest!</span>
+
+                <span class="mood-text">
+                    Mood Quest!
+                </span>
+
             </h1>
 
             <p class="sub-title">
                 Pilih emosi untuk memulai perjalananmu
             </p>
+
         </div>
 
         <!-- CHARACTER -->
         <div class="character-wrapper">
 
-            <!-- Bubble Pikiran -->
+            <!-- THOUGHT BUBBLE -->
             <div id="thoughtBubble" class="thought-bubble">
                 Lagi gimana nih harimu?
             </div>
 
-            <!-- Maskot -->
+            <!-- MASKOT -->
             <img 
                 src="../image/maskot.png" 
                 alt="Maskot"
@@ -86,13 +96,20 @@
 
     </div>
 
+<!-- ========================================= -->
+<!-- GAME SCRIPT -->
+<!-- ========================================= -->
+
 <script>
 
 const emoteArea = document.getElementById('emote-area');
+
 const character = document.getElementById('character');
+
 const thoughtBubble = document.getElementById('thoughtBubble');
 
 const moods = [
+
     {
         type: 'Happy',
         emoji: 'happy.png',
@@ -120,11 +137,12 @@ const moods = [
         message: 'Ups... lagi kesel sama dunia nih? 🔥',
         target: '../view/pageEmote_Angry.html'
     }
+
 ];
 
 const emoteObjects = [];
 
-function initGame() {
+function initGame(){
 
     moods.forEach((mood) => {
 
@@ -139,21 +157,26 @@ function initGame() {
         const emoteSize = window.innerWidth <= 768 ? 90 : 180;
 
         const minX = 10;
+
         const maxX = window.innerWidth - emoteSize - 10;
 
-        const topLimit = 140;
+        const topLimit = window.innerWidth <= 768 ? 220 : 260;
+
         const bottomCharacterSpace = window.innerWidth <= 768 ? 280 : 420;
 
         const minY = topLimit;
+
         const maxY = window.innerHeight - bottomCharacterSpace;
 
         let x = Math.random() * (maxX - minX) + minX;
+
         let y = Math.random() * (maxY - minY) + minY;
 
         emote.style.left = `${x}px`;
         emote.style.top = `${y}px`;
 
         let dx = (Math.random() * 2 - 1) * 1.3;
+
         let dy = (Math.random() * 2 - 1) * 1.3;
 
         // HOVER
@@ -162,6 +185,7 @@ function initGame() {
             character.classList.add('zoom');
 
             thoughtBubble.innerText = mood.message;
+
             thoughtBubble.classList.add('show');
         });
 
@@ -179,63 +203,77 @@ function initGame() {
             document.body.style.opacity = '0';
 
             setTimeout(() => {
+
                 window.location.href = mood.target;
+
             }, 500);
         });
 
         emoteArea.appendChild(emote);
 
         emoteObjects.push({
+
             element: emote,
+
             x,
             y,
+
             dx,
             dy,
+
             minX,
             maxX,
+
             minY,
             maxY
         });
+
     });
 
     animateEmotes();
 }
 
-function animateEmotes() {
+function animateEmotes(){
 
     emoteObjects.forEach((obj) => {
 
         obj.x += obj.dx;
         obj.y += obj.dy;
 
-        // Batasi kanan kiri layar
-        if (obj.x <= obj.minX) {
+        // KANAN KIRI
+        if(obj.x <= obj.minX){
 
             obj.x = obj.minX;
+
             obj.dx *= -1;
         }
 
-        if (obj.x >= obj.maxX) {
+        if(obj.x >= obj.maxX){
 
             obj.x = obj.maxX;
+
             obj.dx *= -1;
         }
 
-        // Batasi atas bawah layar
-        if (obj.y <= obj.minY) {
+        // ATAS BAWAH
+        if(obj.y <= obj.minY){
 
             obj.y = obj.minY;
+
             obj.dy *= -1;
         }
 
-        if (obj.y >= obj.maxY) {
+        if(obj.y >= obj.maxY){
 
             obj.y = obj.maxY;
+
             obj.dy *= -1;
         }
 
         obj.element.style.left = `${obj.x}px`;
+
         obj.element.style.top = `${obj.y}px`;
+
     });
 
     requestAnimationFrame(animateEmotes);
@@ -244,6 +282,10 @@ function animateEmotes() {
 window.onload = initGame;
 
 </script>
+
+<!-- ========================================= -->
+<!-- GEMINI AI -->
+<!-- ========================================= -->
 
 <script type="module">
 
@@ -255,17 +297,22 @@ async function askMoodAI(message){
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
         {
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
 
             body: JSON.stringify({
+
                 contents: [{
+
                     parts: [{
+
                         text: `
                         Kamu adalah MoodAI.
                         Kamu adalah AI pendengar emosi untuk game MoodQuest.
                         Jawab singkat, hangat, suportif, dan santai.
+
                         User: ${message}
                         `
                     }]
@@ -278,6 +325,96 @@ async function askMoodAI(message){
 
     return data.candidates[0].content.parts[0].text;
 }
+
+window.askMoodAI = askMoodAI;
+
+</script>
+
+<!-- ========================================= -->
+<!-- CHAT SCRIPT -->
+<!-- ========================================= -->
+
+<script>
+
+const chatToggle = document.getElementById("chatToggle");
+
+const chatBox = document.getElementById("chatBox");
+
+const sendBtn = document.getElementById("sendBtn");
+
+const chatInput = document.getElementById("chatInput");
+
+const chatMessages = document.getElementById("chatMessages");
+
+// TOGGLE CHAT
+chatToggle.addEventListener("click", () => {
+
+    if(chatBox.style.display === "flex"){
+
+        chatBox.style.display = "none";
+    }
+    else{
+
+        chatBox.style.display = "flex";
+    }
+});
+
+// SEND MESSAGE
+async function sendMessage(){
+
+    const message = chatInput.value.trim();
+
+    if(message === "") return;
+
+    // USER MESSAGE
+    const userDiv = document.createElement("div");
+
+    userDiv.className = "user-message";
+
+    userDiv.innerText = message;
+
+    chatMessages.appendChild(userDiv);
+
+    chatInput.value = "";
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // AI LOADING
+    const aiDiv = document.createElement("div");
+
+    aiDiv.className = "ai-message";
+
+    aiDiv.innerText = "MoodAI lagi mikir...";
+
+    chatMessages.appendChild(aiDiv);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try{
+
+        const reply = await askMoodAI(message);
+
+        aiDiv.innerText = reply;
+    }
+    catch(error){
+
+        aiDiv.innerText = "Yah error 😢 coba lagi nanti";
+    }
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// BUTTON CLICK
+sendBtn.addEventListener("click", sendMessage);
+
+// ENTER KEY
+chatInput.addEventListener("keypress", (e) => {
+
+    if(e.key === "Enter"){
+
+        sendMessage();
+    }
+});
 
 </script>
 

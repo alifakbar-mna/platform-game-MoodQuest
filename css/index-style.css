@@ -1,5 +1,8 @@
-/* ===== ROOT ===== */
-:root {
+/* ========================================= */
+/* ROOT */
+/* ========================================= */
+
+:root{
 
     --happy: #B9E3EB;
     --sad: #1B3044;
@@ -10,15 +13,22 @@
     --bg-bottom: #1e293b;
 }
 
-/* ===== GLOBAL ===== */
+/* ========================================= */
+/* GLOBAL */
+/* ========================================= */
+
 *{
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-html, body{
+html,
+body{
+
     width: 100%;
     height: 100%;
-    margin: 0;
+
     overflow: hidden;
 }
 
@@ -31,9 +41,14 @@ body{
         linear-gradient(to bottom, #0f172a, #1e293b);
 
     transition: opacity 0.5s ease;
+
+    color: white;
 }
 
-/* ===== GAME CONTAINER ===== */
+/* ========================================= */
+/* GAME CONTAINER */
+/* ========================================= */
+
 .game-container{
 
     position: relative;
@@ -44,7 +59,10 @@ body{
     overflow: hidden;
 }
 
-/* ===== BACKGROUND ===== */
+/* ========================================= */
+/* BACKGROUND */
+/* ========================================= */
+
 .sky-bg{
 
     position: absolute;
@@ -56,7 +74,10 @@ body{
         radial-gradient(circle at 50% 80%, rgba(255,255,255,0.04), transparent 25%);
 }
 
-/* ===== LOGO CENTER ===== */
+/* ========================================= */
+/* LOGO */
+/* ========================================= */
+
 .logo-container{
 
     position: absolute;
@@ -70,7 +91,7 @@ body{
 
     text-align: center;
 
-    z-index: 1;
+    z-index: 2;
 
     pointer-events: none;
 }
@@ -79,18 +100,16 @@ body{
 
     font-family: 'Press Start 2P', cursive;
 
-    font-size: clamp(24px, 5vw, 72px);
+    font-size: clamp(28px, 5vw, 72px);
 
-    margin: 0;
-
-    letter-spacing: 0.3vw;
+    letter-spacing: 0.2vw;
 }
 
 .mood-text{
 
     background: linear-gradient(
         to bottom,
-        #ffe27a 00%,
+        #ffe27a 0%,
         #ffc94d 70%,
         #f59e0b 100%
     );
@@ -103,16 +122,21 @@ body{
 
 .sub-title{
 
-    margin-top: 2vh;
+    margin-top: 24px;
 
-    font-size: clamp(10px, 1.5vw, 16px);
+    font-size: clamp(10px, 1.4vw, 16px);
 
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.8);
 
     letter-spacing: 1px;
+
+    line-height: 1.6;
 }
 
-/* ===== CHARACTER WRAPPER ===== */
+/* ========================================= */
+/* CHARACTER */
+/* ========================================= */
+
 .character-wrapper{
 
     position: absolute;
@@ -131,30 +155,53 @@ body{
     z-index: 5;
 }
 
-/* ===== MASKOT ===== */
 .character{
 
     width: min(32vw, 300px);
 
     height: auto;
 
-    display: block;
-
     object-fit: contain;
+
+    display: block;
 
     margin-bottom: -100px;
 
-    transition: transform 0.35s ease, filter 0.35s ease;
+    transition:
+        transform 0.35s ease,
+        filter 0.35s ease;
 
     filter: drop-shadow(0 15px 30px rgba(0,0,0,0.35));
+
+    animation: floaty 3s ease-in-out infinite;
 }
 
 .character.zoom{
 
-    transform: scale(1.08);
+    transform: scale(1.08) translateY(-5px);
 }
 
-/* ===== THOUGHT BUBBLE ===== */
+/* FLOAT ANIMATION */
+
+@keyframes floaty{
+
+    0%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(-10px);
+    }
+
+    100%{
+        transform: translateY(0px);
+    }
+}
+
+/* ========================================= */
+/* THOUGHT BUBBLE */
+/* ========================================= */
+
 .thought-bubble{
 
     position: absolute;
@@ -164,17 +211,17 @@ body{
 
     width: min(40vw, 240px);
 
-    padding: 2vh;
+    padding: 18px;
 
-    background: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.96);
 
     color: #1e293b;
 
-    border-radius: 2vw;
+    border-radius: 28px;
 
     font-family: 'Press Start 2P', cursive;
 
-    font-size: clamp(8px, 1.2vw, 12px);
+    font-size: clamp(8px, 1vw, 12px);
 
     line-height: 1.8;
 
@@ -193,10 +240,11 @@ body{
 
     opacity: 1;
 
-    transform: translateY(0) scale(1);
+    transform: translateY(0px) scale(1);
 }
 
-/* Bubble tail */
+/* BUBBLE TAIL */
+
 .thought-bubble::before,
 .thought-bubble::after{
 
@@ -204,7 +252,7 @@ body{
 
     position: absolute;
 
-    background: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.96);
 
     border-radius: 50%;
 }
@@ -227,7 +275,10 @@ body{
     height: 12px;
 }
 
-/* ===== EMOTES ===== */
+/* ========================================= */
+/* EMOTES */
+/* ========================================= */
+
 .emote{
 
     position: absolute;
@@ -235,17 +286,19 @@ body{
     width: min(15vw, 140px);
     height: min(15vw, 140px);
 
-    border-radius: 50%;
-
-    cursor: pointer;
-
     display: flex;
     justify-content: center;
     align-items: center;
 
-    transition: transform 0.3s ease, filter 0.3s ease;
+    border-radius: 50%;
+
+    cursor: pointer;
 
     z-index: 10;
+
+    transition:
+        transform 0.3s ease,
+        filter 0.3s ease;
 }
 
 .emote img{
@@ -255,8 +308,8 @@ body{
 
     object-fit: contain;
 
-    user-select: none;
     pointer-events: none;
+    user-select: none;
 }
 
 .emote:hover{
@@ -266,19 +319,23 @@ body{
     filter: drop-shadow(0 0 25px rgba(255,255,255,0.25));
 }
 
-/* ================= CHAT ================= */
+/* ========================================= */
+/* CHAT TOGGLE */
+/* ========================================= */
 
 .chat-toggle{
+
     position: fixed;
-    bottom: 25px;
+
     right: 25px;
+    bottom: 25px;
 
     width: 65px;
     height: 65px;
 
     border-radius: 50%;
 
-    background: #ffffff;
+    background: white;
     color: black;
 
     display: flex;
@@ -286,57 +343,82 @@ body{
     justify-content: center;
 
     font-size: 28px;
+
     cursor: pointer;
 
     z-index: 9999;
 
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 
-    transition: 0.3s;
+    transition:
+        transform 0.3s ease,
+        background 0.3s ease;
 }
 
 .chat-toggle:hover{
+
     transform: scale(1.1);
 }
 
+/* ========================================= */
+/* CHAT BOX */
+/* ========================================= */
+
 .chat-box{
+
     position: fixed;
 
-    bottom: 100px;
     right: 25px;
+    bottom: 100px;
 
     width: 320px;
     height: 450px;
 
-    background: rgba(15,23,42,0.95);
-
-    border-radius: 20px;
-
-    overflow: hidden;
-
     display: none;
     flex-direction: column;
 
-    z-index: 9999;
+    overflow: hidden;
 
-    border: 2px solid white;
+    border-radius: 20px;
+
+    background: rgba(15,23,42,0.95);
 
     backdrop-filter: blur(10px);
+
+    border: 2px solid rgba(255,255,255,0.15);
+
+    z-index: 9999;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,0.35);
 }
+
+/* ========================================= */
+/* CHAT HEADER */
+/* ========================================= */
 
 .chat-header{
+
     padding: 18px;
 
-    background: #ffffff;
+    background: white;
+
     color: black;
 
+    text-align: center;
+
     font-family: 'Press Start 2P', cursive;
+
     font-size: 12px;
 
-    text-align: center;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
+/* ========================================= */
+/* CHAT MESSAGES */
+/* ========================================= */
+
 .chat-messages{
+
     flex: 1;
 
     padding: 15px;
@@ -345,35 +427,86 @@ body{
 
     display: flex;
     flex-direction: column;
-    gap: 10px;
+
+    gap: 12px;
 }
+
+/* SCROLLBAR */
+
+.chat-messages::-webkit-scrollbar{
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb{
+
+    background: rgba(255,255,255,0.3);
+
+    border-radius: 10px;
+}
+
+/* ========================================= */
+/* CHAT BUBBLES */
+/* ========================================= */
 
 .user-message,
 .ai-message{
-    padding: 10px 14px;
 
-    border-radius: 14px;
+    padding: 12px 14px;
+
+    border-radius: 16px;
 
     max-width: 80%;
 
     font-size: 14px;
 
-    line-height: 1.5;
+    line-height: 1.6;
+
+    animation: fadeIn 0.3s ease;
 }
 
 .user-message{
-    background: #38bdf8;
+
     align-self: flex-end;
+
+    background: #38bdf8;
+
     color: white;
 }
 
 .ai-message{
-    background: #e2e8f0;
+
     align-self: flex-start;
+
+    background: #e2e8f0;
+
     color: black;
 }
 
+/* MESSAGE ANIMATION */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity: 0;
+
+        transform: translateY(10px);
+    }
+
+    to{
+
+        opacity: 1;
+
+        transform: translateY(0px);
+    }
+}
+
+/* ========================================= */
+/* CHAT INPUT */
+/* ========================================= */
+
 .chat-input-area{
+
     display: flex;
 
     padding: 10px;
@@ -382,32 +515,48 @@ body{
 }
 
 .chat-input-area input{
+
     flex: 1;
 
-    padding: 10px;
+    padding: 12px;
 
     border: none;
     outline: none;
 
     border-radius: 10px;
+
+    font-size: 14px;
 }
 
 .chat-input-area button{
+
+    width: 50px;
+
     margin-left: 10px;
 
     border: none;
-
-    width: 50px;
 
     border-radius: 10px;
 
     cursor: pointer;
 
     font-size: 18px;
+
+    transition: transform 0.2s ease;
 }
 
-/* ===== RESPONSIVE FIX ===== */
+.chat-input-area button:hover{
+
+    transform: scale(1.05);
+}
+
+/* ========================================= */
+/* RESPONSIVE */
+/* ========================================= */
+
 @media (max-width: 768px){
+
+    /* LOGO */
 
     .logo-container{
         top: 30%;
@@ -417,27 +566,62 @@ body{
         font-size: 14vw;
     }
 
-    .character{
-        width: 60vw;
-        margin-bottom: -30px;
-    }
-
-    .thought-bubble{
-        left: 55%;
-        top: 5%;
-        width: 60vw;
-    }
-
-    .instruction{
-        font-size: 3.5vw;
-    }
-
     .sub-title{
         font-size: 4vw;
     }
 
+    /* CHARACTER */
+
+    .character{
+
+        width: 60vw;
+
+        margin-bottom: -30px;
+    }
+
+    .character-wrapper{
+        bottom: 2vh;
+    }
+
+    /* THOUGHT BUBBLE */
+
+    .thought-bubble{
+
+        left: 50%;
+
+        top: -10px;
+
+        transform: translateX(-50%);
+
+        width: 75vw;
+
+        font-size: 10px;
+    }
+
+    /* EMOTES */
+
     .emote{
+
         width: 22vw;
         height: 22vw;
+    }
+
+    /* CHAT */
+
+    .chat-box{
+
+        width: 90vw;
+        height: 65vh;
+
+        right: 5vw;
+        bottom: 90px;
+    }
+
+    .chat-toggle{
+
+        width: 58px;
+        height: 58px;
+
+        font-size: 24px;
     }
 }

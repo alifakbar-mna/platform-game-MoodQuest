@@ -288,13 +288,11 @@ window.onload = initGame;
 <!-- ========================================= -->
 
 <script>
-// Gunakan API Key kamu di sini
-const API_KEY = "AIzaSyAneGAZeWUsIzY3-2CubuXJWv8NulnsW-0"; 
+const API_KEY = "AIzaSyAneGAZeWUsIzY3-2CubuXJWv8NulnsW-0";
 
 async function askMoodAI(message) {
-    // Gunakan 1.5-flash untuk kuota gratis yang lebih banyak
-    const MODEL_NAME = "gemini-1.5-flash"; 
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
+    // Gunakan v1 (Stable) agar lebih terjamin koneksinya
+    const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     try {
         const response = await fetch(URL, {
@@ -305,32 +303,37 @@ async function askMoodAI(message) {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Kamu adalah MoodAI, asisten empati di game MoodQuest. 
-                        Tugasmu: Mendengarkan cerita user, memberi semangat, dan merespon dengan hangat.
-                        Gunakan bahasa Indonesia yang santai, suportif, dan singkat (maksimal 2-3 kalimat).
+                        text: `Kamu adalah MoodAI, pendengar setia di game MoodQuest. 
+                        Jawab user dengan hangat, singkat (maks 2 kalimat), dan gunakan Bahasa Indonesia santai.
                         
                         User: ${message}`
                     }]
                 }],
-                // Tambahan setting agar respon lebih terkontrol
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 150,
+                    maxOutputTokens: 100
                 }
             })
         });
 
         const data = await response.json();
 
-        if (data.candidates && data.candidates[0].content) {
-            return data.candidates[0].content.parts[0].text;
-        } else {
-            console.error("API Error:", data);
-            return "MoodAI lagi istirahat sebentar, coba lagi ya... 🌙";
+        // Debugging: Jika masih error, lihat pesan di Console browser
+        if (data.error) {
+            console.error("Detail Error:", data.error.message);
+            
+            // Jika 404, coba ganti URL dari /v1/ menjadi /v1beta/
+            if (data.error.code === 404) {
+                return "Maaf, MoodAI sedang sinkronisasi model (Error 404).";
+            }
+            return "MoodAI lagi pusing nih, coba lagi ya! 😭";
         }
+
+        return data.candidates[0].content.parts[0].text;
+
     } catch (error) {
-        console.error("Fetch Error:", error);
-        return "Koneksi kita terputus, coba cek internetmu ya! 😭";
+        console.error("Network Error:", error);
+        return "Koneksi gagal! Pastikan kuota internetmu ada ya.";
     }
 }
 

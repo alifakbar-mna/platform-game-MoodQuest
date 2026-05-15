@@ -287,7 +287,7 @@ window.onload = initGame;
 <!-- GEMINI AI -->
 <!-- ========================================= -->
 
-<script type="module">
+<script>
 const API_KEY = "AIzaSyAneGAZeWUsIzY3-2CubuXJWv8NulnsW-0";
 
 async function askMoodAI(message){
@@ -295,7 +295,7 @@ async function askMoodAI(message){
     try{
 
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`,
+            `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${API_KEY}`,
             {
                 method: "POST",
 
@@ -309,8 +309,8 @@ async function askMoodAI(message){
                         parts: [{
                             text: `
                             Kamu adalah MoodAI.
-                            Kamu adalah AI pendengar emosi untuk game MoodQuest.
-                            Jawab singkat, hangat, suportif, dan santai.
+                            AI pendengar emosi untuk game MoodQuest.
+                            Jawab singkat, hangat, santai, dan suportif.
 
                             User: ${message}
                             `
@@ -324,10 +324,9 @@ async function askMoodAI(message){
 
         console.log(JSON.stringify(data, null, 2));
 
-        // ERROR CHECK
-        if(!data.candidates){
+        if(data.error){
 
-            return "MoodAI lagi capek 😢";
+            return "MoodAI lagi error 😢";
         }
 
         return data.candidates[0].content.parts[0].text;
@@ -336,7 +335,7 @@ async function askMoodAI(message){
 
         console.log(error);
 
-        return "Koneksi MoodAI gagal 😭";
+        return "Koneksi gagal 😭";
     }
 }
 

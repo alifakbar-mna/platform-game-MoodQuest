@@ -291,7 +291,7 @@ window.onload = initGame;
 const API_KEY = "AIzaSyAneGAZeWUsIzY3-2CubuXJWv8NulnsW-0";
 
 async function askMoodAI(message) {
-    // Gunakan v1 (Stable) agar lebih terjamin koneksinya
+    // Gunakan v1, bukan v1beta
     const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     try {
@@ -303,37 +303,26 @@ async function askMoodAI(message) {
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Kamu adalah MoodAI, pendengar setia di game MoodQuest. 
-                        Jawab user dengan hangat, singkat (maks 2 kalimat), dan gunakan Bahasa Indonesia santai.
+                        text: `Kamu adalah MoodAI, asisten empati di game MoodQuest. 
+                        Jawab user dengan hangat, santai, dan singkat (maks 2 kalimat) dalam Bahasa Indonesia.
                         
                         User: ${message}`
                     }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 100
-                }
+                }]
             })
         });
 
         const data = await response.json();
 
-        // Debugging: Jika masih error, lihat pesan di Console browser
-        if (data.error) {
-            console.error("Detail Error:", data.error.message);
-            
-            // Jika 404, coba ganti URL dari /v1/ menjadi /v1beta/
-            if (data.error.code === 404) {
-                return "Maaf, MoodAI sedang sinkronisasi model (Error 404).";
-            }
-            return "MoodAI lagi pusing nih, coba lagi ya! 😭";
+        if (data.candidates && data.candidates[0].content) {
+            return data.candidates[0].content.parts[0].text;
+        } else {
+            console.error("API Error:", data);
+            return "MoodAI lagi istirahat sebentar, coba lagi ya... 🌙";
         }
-
-        return data.candidates[0].content.parts[0].text;
-
     } catch (error) {
-        console.error("Network Error:", error);
-        return "Koneksi gagal! Pastikan kuota internetmu ada ya.";
+        console.error("Fetch Error:", error);
+        return "Koneksi gagal! 😭";
     }
 }
 

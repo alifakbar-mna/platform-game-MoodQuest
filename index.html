@@ -284,49 +284,40 @@ window.onload = initGame;
 </script>
 
 <!-- ========================================= -->
-<!-- GEMINI AI -->
+<!-- MOOD AI API -->
 <!-- ========================================= -->
 
 <script>
-const API_KEY = "AIzaSyAneGAZeWUsIzY3-2CubuXJWv8NulnsW-0";
 
-async function askMoodAI(message) {
-    // Gunakan v1, bukan v1beta
-    const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+async function askMoodAI(message){
 
-    try {
-        const response = await fetch(URL, {
+    try{
+
+        const response = await fetch("/api/geminiAI", {
+
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `Kamu adalah MoodAI, asisten empati di game MoodQuest. 
-                        Jawab user dengan hangat, santai, dan singkat (maks 2 kalimat) dalam Bahasa Indonesia.
-                        
-                        User: ${message}`
-                    }]
-                }]
+                message: message
             })
         });
 
         const data = await response.json();
 
-        if (data.candidates && data.candidates[0].content) {
-            return data.candidates[0].content.parts[0].text;
-        } else {
-            console.error("API Error:", data);
-            return "MoodAI lagi istirahat sebentar, coba lagi ya... 🌙";
-        }
-    } catch (error) {
-        console.error("Fetch Error:", error);
-        return "Koneksi gagal! 😭";
+        return data.reply;
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        return "MoodAI lagi error 😭";
     }
 }
-
-window.askMoodAI = askMoodAI;
 
 </script>
 
@@ -395,6 +386,7 @@ async function sendMessage(){
         const reply = await askMoodAI(message);
 
         aiDiv.innerText = reply;
+
     }
     catch(error){
 

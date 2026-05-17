@@ -1,31 +1,29 @@
 export default async function handler(req, res) {
 
-    // CEK METHOD
-    if (req.method !== "POST") {
+    if(req.method !== "POST"){
 
         return res.status(405).json({
-            error: "Method tidak diizinkan"
+            reply: "Method tidak diizinkan"
         });
     }
 
-    try {
+    try{
 
-        // AMBIL MESSAGE
         const { message } = req.body;
 
-        // CEK API KEY
         const apiKey = process.env.GEMINI_API_KEY;
 
-        if (!apiKey) {
+        if(!apiKey){
 
             return res.status(500).json({
-                error: "API KEY tidak terbaca dari Vercel"
+                reply: "API KEY tidak ditemukan"
             });
         }
 
-        // REQUEST KE GEMINI
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+
             {
                 method: "POST",
 
@@ -34,52 +32,50 @@ export default async function handler(req, res) {
                 },
 
                 body: JSON.stringify({
+
                     contents: [
                         {
                             parts: [
                                 {
                                     text:
                                     `Kamu adalah MoodAI.
-                                    Jawab santai dan singkat.
+                                    Jawab singkat, santai, ramah.
                                     User: ${message}`
                                 }
                             ]
                         }
                     ]
+
                 })
             }
         );
 
-        // AMBIL DATA
         const data = await response.json();
 
         console.log(data);
 
-        // CEK ERROR GEMINI
-        if (data.error) {
+        if(data.error){
 
             return res.status(500).json({
-                error: data.error.message
+                reply: data.error.message
             });
         }
 
-        // AMBIL TEXT
         const reply =
-            data.candidates?.[0]?.content?.parts?.[0]?.text
-            || "Tidak ada balasan";
+        data.candidates?.[0]?.content?.parts?.[0]?.text
+        || "MoodAI bingung 😭";
 
-        // RETURN
         return res.status(200).json({
             reply
         });
 
     }
-    catch (error) {
+    catch(error){
 
         console.log(error);
 
         return res.status(500).json({
-            error: "Server error"
+            reply: "Server error 😢"
         });
     }
 }

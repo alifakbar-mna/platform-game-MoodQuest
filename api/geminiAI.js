@@ -13,16 +13,9 @@ export default async function handler(req, res) {
 
         const apiKey = process.env.GEMINI_API_KEY;
 
-        if(!apiKey){
-
-            return res.status(500).json({
-                reply: "API KEY tidak ditemukan"
-            });
-        }
-
         const response = await fetch(
 
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
 
             {
                 method: "POST",
@@ -39,7 +32,7 @@ export default async function handler(req, res) {
                                 {
                                     text:
                                     `Kamu adalah MoodAI.
-                                    Jawab singkat, santai, ramah.
+                                    Jawab singkat, santai, ramah, bahasa Indonesia.
                                     User: ${message}`
                                 }
                             ]
@@ -53,13 +46,6 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         console.log(data);
-
-        if(data.error){
-
-            return res.status(500).json({
-                reply: data.error.message
-            });
-        }
 
         const reply =
         data.candidates?.[0]?.content?.parts?.[0]?.text

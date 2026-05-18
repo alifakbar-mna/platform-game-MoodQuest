@@ -18,7 +18,7 @@
 
     <!-- CHAT BUTTON -->
     <div class="chat-toggle" id="chatToggle">
-        💬
+        <img src="image/maskot.png" alt="Mooru">
     </div>
 
     <!-- CHAT BOX -->
@@ -321,7 +321,7 @@ async function askMoodAI(message){
 
         console.error(error);
 
-        return "MoodAI lagi error 😭";
+        return "Mooru lagi error 😭";
     }
 }
 
@@ -381,7 +381,7 @@ async function sendMessage(){
 
     aiDiv.className = "ai-message";
 
-    aiDiv.innerText = "MoodAI lagi mikir...";
+    aiDiv.innerText = "Mooru lagi mikir...";
 
     chatMessages.appendChild(aiDiv);
 

@@ -354,6 +354,11 @@ body{
         transform 0.3s ease,
         background 0.3s ease;
 }
+.chat-toggle img{
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
 
 .chat-toggle:hover{
 

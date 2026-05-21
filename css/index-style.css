@@ -36,9 +36,10 @@ body{
 
     font-family: 'Segoe UI', sans-serif;
 
-    background:
-        radial-gradient(circle at top, #334155 0%, transparent 35%),
-        linear-gradient(to bottom, #0f172a, #1e293b);
+    background-image: url("../image/bg-laptop.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
     transition: opacity 0.5s ease;
 
@@ -561,6 +562,13 @@ body{
 
 @media (max-width: 768px){
 
+    /* BODY */
+    body{
+        background-image: url("../image/bg-hp.jpeg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
     /* LOGO */
 
     .logo-container{

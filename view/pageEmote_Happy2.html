@@ -82,10 +82,10 @@
                 // Update tampilan visual termometer
                 thermometerFill.style.height = progress + '%';
 
-                // Cek kondisi menang
-                if (progress >= 100) {
-                    progress = 100;
-                    thermometerFill.style.height = '100%';
+                // CEK KONDISI MENANG: Diubah menjadi 95% agar lebih pasti ter-trigger
+                if (progress >= 95) {
+                    progress = 95; // Kunci di angka 95%
+                    thermometerFill.style.height = '95%';
                     triggerWin();
                 }
             }
@@ -97,7 +97,9 @@
             if (isPaused || isFinished) return;
 
             progress += gainAmount;
-            if (progress > 100) progress = 100;
+            
+            // Batasi maks di 95% agar sinkron dengan kondisi menang
+            if (progress > 95) progress = 95;
 
             // Beri efek feedback squish/loncat kecil pada Mooru saat dielus
             mooruCharacter.style.transform = 'scale(1.08) translateY(-5px)';
@@ -108,7 +110,6 @@
             // Munculkan partikel hati kecil di posisi pointer
             createHeartParticle(clientX, clientY);
         }
-
         // --- 2. DETEKSI SWIPE (HP) & DRAG MOUSE (LAPTOP) ---
         
         // Handler untuk Laptop (Mouse)

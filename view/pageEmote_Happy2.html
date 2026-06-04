@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodQuest - Pat Mooru</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/pageEmote2-style.css">
+</head>
+<body>
+
+    <div id="pauseOverlay" class="pause-overlay" onclick="togglePause()">
+        <div class="pause-content">
+            <p class="pause-title">GAME PAUSED</p>
+            <p class="pause-sub">Klik di mana saja untuk melanjutkan</p>
+        </div>
+    </div>
+
+    <header class="game-header">
+        <h1 class="emotion-title" id="gameTitle">Sad</h1>
+        <button class="pause-btn" onclick="event.stopPropagation(); togglePause();" title="Pause">
+            <span class="pause-icon">||</span>
+        </button>
+    </header>
+
+    <main class="game-area">
+        
+        <div class="thermometer-container">
+            <div class="thermometer-glass">
+                <div id="thermometerFill" class="thermometer-fill"></div>
+                <div class="thermometer-ticks">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+            <div class="thermometer-bulb"></div>
+            <div class="heart-icon">❤️</div>
+        </div>
+
+        <div class="character-zone" id="swipeZone">
+            <img src="../image/sad.png" alt="Mooru" id="mooruCharacter" class="mooru-avatar">
+            
+            <div id="particleContainer"></div>
+        </div>
+
+    </main>
+
+    <div id="winBanner" class="win-banner">
+        <h2>Mooru is Happy Now! ✨</h2>
+        <button class="finish-btn" onclick="backToHome()">BACK TO HOME</button>
+    </div>
+
+    <script>
+        // State Game
+        let isPaused = false;
+        let isFinished = false;
+        let progress = 20; // Mulai dari 20% awal
+        const decayRate = 0.15; // Kecepatan termometer berkurang per frame
+        const gainAmount = 4; // Tambahan progress setiap swipe/pat berhasil
+
+        // DOM Elements
+        const thermometerFill = document.getElementById('thermometerFill');
+        const mooruCharacter = document.getElementById('mooruCharacter');
+        const gameTitle = document.getElementById('gameTitle');
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const winBanner = document.getElementById('winBanner');
+        const swipeZone = document.getElementById('swipeZone');
+
+        // Variabel untuk tracking swipe/drag posisi X
+        let isDragging = false;
+        let lastX = 0;
+        let lastDirection = null; // 'left' atau 'right'
+
+        // --- 1. LOGIKA UTAMA GAMEPLAY (LOOP) ---
+        function updateGame() {
+            if (!isPaused && !isFinished) {
+                // Termometer berkurang perlahan
+                progress -= decayRate;
+                if (progress < 0) progress = 0;
+                
+                // Update tampilan visual termometer
+                thermometerFill.style.height = progress + '%';
+
+                // Cek kondisi menang
+                if (progress >= 100) {
+                    progress = 100;
+                    thermometerFill.style.height = '100%';
+                    triggerWin();
+                }
+            }
+            requestAnimationFrame(updateGame);
+        }
+
+        // Fungsi yang dipanggil saat pat/swipe berhasil terdeteksi
+        function handlePat(clientX, clientY) {
+            if (isPaused || isFinished) return;
+
+            progress += gainAmount;
+            if (progress > 100) progress = 100;
+
+            // Beri efek feedback squish/loncat kecil pada Mooru saat dielus
+            mooruCharacter.style.transform = 'scale(1.08) translateY(-5px)';
+            setTimeout(() => {
+                if(!isFinished) mooruCharacter.style.transform = 'scale(1) translateY(0)';
+            }, 100);
+
+            // Munculkan partikel hati kecil di posisi pointer
+            createHeartParticle(clientX, clientY);
+        }
+
+        // --- 2. DETEKSI SWIPE (HP) & DRAG MOUSE (LAPTOP) ---
+        
+        // Handler untuk Laptop (Mouse)
+        swipeZone.addEventListener('mousedown', (e) => {
+            if (e.button === 0) { // Klik kiri saja
+                isDragging = true;
+                lastX = e.clientX;
+                lastDirection = null;
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            detectSwipeDirection(e.clientX, e.clientY);
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        // Handler untuk HP (Touch)
+        swipeZone.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            lastX = touch.clientX;
+            lastDirection = null;
+        });
+
+        swipeZone.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            detectSwipeDirection(touch.clientX, touch.clientY);
+        });
+
+        // Algoritma mendeteksi perubahan arah geser kanan/kiri secara bolak-balik
+        function detectSwipeDirection(currentX, currentY) {
+            const deltaX = currentX - lastX;
+            const threshold = 15; // Jarak minimum perpindahan pixel agar dihitung elusan
+
+            if (Math.abs(deltaX) > threshold) {
+                const currentDirection = deltaX > 0 ? 'right' : 'left';
+                
+                // Jika arah berubah (dari kiri ke kanan atau sebaliknya), hitung sebagai 1 pat/elusan!
+                if (lastDirection !== null && currentDirection !== lastDirection) {
+                    handlePat(currentX, currentY);
+                }
+                
+                lastX = currentX;
+                lastDirection = currentDirection;
+            }
+        }
+
+        // --- 3. EFEK VISUAL & PARTIKEL ---
+        function createHeartParticle(x, y) {
+            const container = document.getElementById('particleContainer');
+            const heart = document.createElement('div');
+            heart.className = 'particle-heart';
+            heart.innerText = '❤️';
+            
+            // Atur posisi relatif terhadap zona karakter
+            const rect = swipeZone.getBoundingClientRect();
+            heart.style.left = (x - rect.left) + 'px';
+            heart.style.top = (y - rect.top) + 'px';
+            
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 800);
+        }
+
+        // --- 4. FITUR PAUSE (FREEZE JAVASCRIPT) ---
+        function togglePause() {
+            if (isFinished) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseOverlay.classList.add('active');
+                mooruCharacter.style.animationPlayState = 'paused';
+            } else {
+                pauseOverlay.classList.remove('active');
+                mooruCharacter.style.animationPlayState = 'running';
+            }
+        }
+
+        // --- 5. KONDISI MENANG ---
+        function triggerWin() {
+            isFinished = true;
+            
+            // 1. Ubah judul menjadi Happy dengan gradasi emas
+            gameTitle.innerText = "Happy";
+            gameTitle.style.background = "linear-gradient(to bottom, #ffe27a, #f59e0b)";
+            gameTitle.style.webkitBackgroundClip = "text";
+
+            // 2. Ubah gambar maskot menjadi versi menang (happyWin.png)
+            mooruCharacter.src = "../image/happyWin.png";
+            mooruCharacter.classList.add('happy-bounce');
+
+            // 3. Beri sedikit delay (misal 800ms) agar user sempat melihat ekspresi menang Mooru,
+            //    lalu otomatis direct langsung ke pageEmote_Happy3.html dengan efek transisi.
+            setTimeout(() => {
+                document.body.style.opacity = '0';
+                document.body.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => {
+                    window.location.href = 'pageEmote_Happy3.html';
+                }, 500);
+                
+            }, 800);
+        }
+
+        // Jalankan game loop saat halaman siap
+        window.onload = updateGame;
+    </script>
+</body>
+</html>

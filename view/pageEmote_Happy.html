@@ -1,11 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Gameee</title>
+    <title>MoodQuest - Happy Quest</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
 </head>
 <body>
-    <h1>Welcome to the Happy Gameee</h1>
+
+    <header class="game-header">
+        <h1 class="emotion-title">Happy</h1>
+        
+        <button class="pause-btn" onclick="togglePause()" title="Pause">
+            <span class="pause-icon">||</span>
+        </button>
+    </header>
+
+    <main class="instruction-container">
+        
+        <div class="swipe-arrow-wrapper">
+            <svg class="swipe-arrow" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 20 70 Q 100 10 180 70" stroke="white" stroke-width="4" stroke-dasharray="8 6" fill="none" />
+                <path d="M 25 50 L 20 70 L 42 68" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <path d="M 175 50 L 180 70 L 158 68" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            </svg>
+        </div>
+
+        <h2 class="action-text">Pat!</h2>
+        <p class="sub-instruction">
+            swipe left and right repeatedly<br>across mooru's body
+        </p>
+
+    </main>
+
+    <footer class="game-footer">
+        <button class="next-btn-corner" onclick="goToNextPage()">NEXT</button>
+    </footer>
+
+    <script>
+        function togglePause() {
+            alert("Game Paused ⏸️");
+            // Di sini kamu bisa tambahkan logika pop-up menu pause nanti jika diperlukan
+        }
+
+        function goToNextPage() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                window.location.href = '../view/pageEmote_Happy2.html';
+            }, 500);
+        }
+    </script>
 </body>
 </html>

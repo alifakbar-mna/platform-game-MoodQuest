@@ -142,7 +142,7 @@
         // Algoritma mendeteksi perubahan arah geser kanan/kiri secara bolak-balik
         function detectSwipeDirection(currentX, currentY) {
             const deltaX = currentX - lastX;
-            const threshold = 15; // Jarak minimum perpindahan pixel agar dihitung elusan
+            const threshold = 5; // Jarak minimum perpindahan pixel agar dihitung elusan
 
             if (Math.abs(deltaX) > threshold) {
                 const currentDirection = deltaX > 0 ? 'right' : 'left';

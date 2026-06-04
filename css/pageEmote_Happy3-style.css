@@ -1,0 +1,179 @@
+/* ========================================= */
+/* GLOBAL & THEME ENVIRONMENT */
+/* ========================================= */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-image: url("../image/bg-laptop.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-image: url("../image/bg-hp.png");
+    }
+}
+
+/* ========================================= */
+/* SUCCESS CONTAINER */
+/* ========================================= */
+.success-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    z-index: 2;
+    animation: fadeInPage 0.6s ease-out;
+}
+
+/* ========================================= */
+/* EFEK SUNBURST (CAHAYA Kemenangan Berputar) */
+/* ========================================= */
+.sunburst-bg {
+    position: absolute;
+    width: 200vw;
+    height: 200vh;
+    background: repeating-conic-gradient(
+        from 0deg,
+        rgba(255, 226, 122, 0.15) 0deg 15deg,
+        transparent 15deg 30deg
+    );
+    z-index: -1;
+    pointer-events: none;
+    animation: rotateSunburst 20s linear infinite;
+}
+
+/* ========================================= */
+/* TYPOGRAPHY */
+/* ========================================= */
+.success-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(24px, 5vw, 44px);
+    line-height: 1.5;
+    margin-bottom: 30px;
+    background: linear-gradient(to bottom, #ffe27a, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px white;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+}
+
+.congrats-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(10px, 2vw, 14px);
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 40px;
+    line-height: 1.8;
+    max-width: 80%;
+}
+
+/* ========================================= */
+/* MECHANIC: FRAME ANIMATOR (GANTI GAMBAR TIAP 1 DETIK) */
+/* ========================================= */
+.mascot-animator {
+    position: relative;
+    width: min(50vw, 260px);
+    height: min(50vw, 260px);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: bounceEffect 0.6s ease-in-out infinite alternate;
+}
+
+.mooru-frame {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+}
+
+/* Logika Opacity Loop: Total Durasi 2 Detik (Masing-masing muncul 1 detik bergantian) */
+.frame-1 {
+    animation: switchFrame1 2s steps(1) infinite;
+}
+
+.frame-2 {
+    animation: switchFrame2 2s steps(1) infinite;
+}
+
+/* ========================================= */
+/* BUTTON BACK TO HOME */
+/* ========================================= */
+.home-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    padding: 15px 35px;
+    border: 3px solid white;
+    border-radius: 12px;
+    background: linear-gradient(to bottom, #ffe27a, #f59e0b);
+    color: #1e293b;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 -3px 0 rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.home-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.home-btn:active {
+    transform: scale(0.98) translateY(1px);
+}
+
+/* ========================================= */
+/* ANIMATIONS KEYFRAMES */
+/* ========================================= */
+
+/* Frame 1: Muncul di detik 0s - 1s, Menghilang di detik 1s - 2s */
+@keyframes switchFrame1 {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Frame 2: Menghilang di detik 0s - 1s, Muncul di detik 1s - 2s */
+@keyframes switchFrame2 {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Putaran Background Cahaya */
+@keyframes rotateSunburst {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Efek Maskot Membal/Melompat Kecil */
+@keyframes bounceEffect {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-12px); }
+}
+
+@keyframes fadeInPage {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

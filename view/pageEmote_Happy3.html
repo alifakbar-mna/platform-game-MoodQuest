@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodQuest - Quest Success!</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/pageEmote_Happy3-style.css">
+</head>
+<body>
+
+    <div class="success-container">
+        
+        <div class="sunburst-bg"></div>
+
+        <h1 class="success-title">QUEST<br>SUCCESS!</h1>
+
+        <div class="mascot-animator">
+            <img src="../image/nyam(Happy).png" alt="Mooru Happy 1" class="mooru-frame frame-1">
+            <img src="../image/nyam2(Happy).png" alt="Mooru Happy 2" class="mooru-frame frame-2">
+        </div>
+
+        <p class="congrats-text">You made Mooru super happy today!</p>
+
+        <button class="home-btn" onclick="goToHome()">BACK TO HOME</button>
+    </div>
+
+    <script>
+        function goToHome() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                window.location.href = 'homePage.html';
+            }, 500);
+        }
+    </script>
+</body>
+</html>

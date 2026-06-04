@@ -1,0 +1,160 @@
+/* ========================================= */
+/* GLOBAL & THEME */
+/* ========================================= */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-image: url("../image/bg-laptop.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    body {
+        background-image: url("../image/bg-hp.png");
+    }
+}
+
+/* ========================================= */
+/* CLOUD DIALOG CONTAINER */
+/* ========================================= */
+.intro-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 600px;
+    animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Struktur Awan Dialog (Mirip Gambar Sketsa) */
+.cloud-bubble {
+    position: relative;
+    background: rgba(255, 255, 255, 0.96);
+    color: #1e293b;
+    border-radius: 40px;
+    padding: clamp(30px, 6vw, 50px) clamp(20px, 5vw, 40px);
+    width: 100%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Efek Bergelombang Tambahan Untuk Membentuk Awan */
+.cloud-bubble::before,
+.cloud-bubble::after {
+    content: "";
+    position: absolute;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Lengkungan awan atas */
+.cloud-bubble::before {
+    width: 140px;
+    height: 140px;
+    top: -40px;
+    left: 10%;
+}
+
+/* Lengkungan awan samping kanan */
+.cloud-bubble::after {
+    width: 120px;
+    height: 120px;
+    bottom: -20px;
+    right: 8%;
+}
+
+/* Ornamen Bintang di Kanan Atas Awan */
+.star-decoration {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    font-size: 24px;
+    color: #f59e0b;
+    animation: spinStar 4s linear infinite;
+}
+
+/* ========================================= */
+/* TYPOGRAPHY (Gaya Tulisan Sesuai Sketsa) */
+/* ========================================= */
+.intro-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(14px, 3.5vw, 20px);
+    color: #f59e0b;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    -webkit-text-stroke: 0.5px #1e293b;
+}
+
+.intro-text {
+    font-size: clamp(14px, 3vw, 17px);
+    font-weight: 600;
+    line-height: 1.8;
+    color: #334155;
+    margin-bottom: 20px;
+}
+
+.dots {
+    font-size: 24px;
+    font-weight: bold;
+    color: #94a3b8;
+    margin: 15px 0 25px 0;
+    letter-spacing: 6px;
+}
+
+/* ========================================= */
+/* BUTTON NEXT (Sederhana & Satu Tema) */
+/* ========================================= */
+.next-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    padding: 15px 40px;
+    border: 3px solid white;
+    border-radius: 12px;
+    background: linear-gradient(to bottom, #ffe27a, #f59e0b);
+    color: #1e293b;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3), inset 0 -3px 0 rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.next-btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.1);
+}
+
+.next-btn:active {
+    transform: translateY(1px);
+}
+
+/* ========================================= */
+/* ANIMATIONS */
+/* ========================================= */
+@keyframes popUp {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes spinStar {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}

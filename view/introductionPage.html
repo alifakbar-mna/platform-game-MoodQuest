@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodQuest - Introduction</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../css/introduction-style.css">
+</head>
+<body>
+
+    <div class="intro-wrapper">
+        <div class="cloud-bubble">
+            <div class="star-decoration">✦</div>
+
+            <h2 class="intro-title">Welcome to<br>Mood Quest!</h2>
+            
+            <p class="intro-text">Hi, I'm Mooru, your emotional sidekick!</p>
+            
+            <div class="dots">. . .</div>
+            
+            <p class="intro-text">Let's unravel those feelings and conquer today together!</p>
+        </div>
+
+        <button class="next-btn" onclick="goToHome()">NEXT</button>
+    </div>
+
+    <script>
+        function goToHome() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                window.location.href = 'homePage.html';
+            }, 500);
+        }
+    </script>
+</body>
+</html>

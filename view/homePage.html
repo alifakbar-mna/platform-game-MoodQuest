@@ -14,6 +14,10 @@
 
 </head>
 
+<audio id="bgMusic" loop>
+    <source src="../audio/music-bg.mp3" type="audio/mpeg">
+</audio>
+
 <body>
 
     <!-- SETTINGS BUTTON -->
@@ -454,6 +458,35 @@ const sendBtn = document.getElementById("sendBtn");
 const chatInput = document.getElementById("chatInput");
 
 const chatMessages = document.getElementById("chatMessages");
+
+// MUSIC
+const bgMusic = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
+
+// supaya autoplay bisa jalan setelah user interaction
+let musicStarted = false;
+
+// START MUSIC pertama kali user interaksi
+function startMusicOnce(){
+    if (!musicStarted) {
+        bgMusic.volume = 0.4; // jangan terlalu keras
+        bgMusic.play().catch(err => console.log("Autoplay blocked:", err));
+        musicStarted = true;
+    }
+}
+
+// aktifkan saat user klik pertama kali di halaman
+document.addEventListener("click", startMusicOnce, { once: true });
+
+// toggle music ON/OFF
+musicToggle.addEventListener("change", () => {
+    if (musicToggle.checked) {
+        bgMusic.play();
+    } else {
+        bgMusic.pause();
+    }
+});
+
 
 // TOGGLE CHAT
 chatToggle.addEventListener("click", () => {

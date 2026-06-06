@@ -96,7 +96,7 @@ body {
     font-family: 'Press Start 2P', cursive;
     font-size: 14px;
     color: #1e293b;
-    z-index: 10; /* Menghindari ikon tertimbun lingkaran awan */
+    z-index: 2;
     font-weight: bold;
     letter-spacing: -1px;
 }

@@ -3,32 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Emotion Games - Playing</title>
-    <link rel="stylesheet" href="style-base.css">
+    <title>Happy Emotion Games - Gameplay</title>
     <link rel="stylesheet" href="../css/pageEmote_Happy2-style.css">
 </head>
 <body>
     <div class="game-container" id="arena-container">
         
         <div class="game-hud">
-            <div class="score-board">SCORE: <span id="score-val">0</span></div>
-            <div class="wave-board">WAVE: <span id="wave-val">1/3</span></div>
+            <div>SCORE: <span id="score-val">0</span></div>
+            <div>WAVE: <span id="wave-val">1/3</span></div>
         </div>
 
         <div class="sweets-bar-wrapper">
-            <div class="sweets-box">
-                <img src="../image/sweets_bar.png" class="bar-decor" alt="Bar">
-                <span class="sweets-title">MOORU WANTS:</span>
-                <div class="target-items-holder" id="target-list"></div>
-            </div>
+            <img src="../image/sweets_bar.png" class="sweets-bar-bg" alt="Sweets Bar">
+            <div class="target-items-holder" id="target-list"></div>
         </div>
 
-        <div class="character-wrapper" id="game-mooru-container" style="bottom: 5vh;">
-            <div class="floating-points" id="game-pop-points"></div>
-            <img src="../image/nyam2.png" class="character" id="mooru-sprite" alt="Mooru">
+        <div id="game-score-float" class="score-float"></div>
+
+        <div class="character-wrapper" id="game-mooru-container">
+            <img src="../image/nyam2(Happy).png" class="character" id="mooru-sprite" alt="Mooru">
         </div>
 
-        <div class="picnic-mat"></div>
     </div>
 
     <script>
@@ -46,17 +42,17 @@
         let targetItems = [];
         let gameActive = true;
         let spawnInterval;
-        let mooruX = 50;
+        let mooruX = 50; 
 
         const mooruContainer = document.getElementById('game-mooru-container');
         const mooruSprite = document.getElementById('mooru-sprite');
         const arena = document.getElementById('arena-container');
-        const popPoints = document.getElementById('game-pop-points');
+        const floatText = document.getElementById('game-score-float');
 
         const waveConfigs = {
-            1: { targetScore: 25, speed: 4, spawnRate: 1600 },
-            2: { targetScore: 50, speed: 6, spawnRate: 1200 },
-            3: { targetScore: 100, speed: 9, spawnRate: 800 }
+            1: { targetScore: 25, speed: 5, spawnRate: 1800 },
+            2: { targetScore: 50, speed: 7, spawnRate: 1300 },
+            3: { targetScore: 100, speed: 10, spawnRate: 900 }
         };
 
         function generateTargetItems() {
@@ -80,23 +76,26 @@
             mooruContainer.style.left = mooruX + '%';
         });
 
-        function changeExpression(type, pointText) {
-            popPoints.innerText = pointText;
+        function changeExpression(type) {
             if (type === 'like') {
-                mooruSprite.src = '../image/nyam.png';
-                popPoints.className = 'floating-points plus-pop';
-            } else {
+                mooruSprite.src = '../image/nyam(Happy).png';
+                triggerFloatText("+5", "#4ade80");
+            } else if (type === 'dislike') {
                 mooruSprite.src = '../image/ew.png';
-                popPoints.className = 'floating-points minus-pop';
+                triggerFloatText("-5", "#ef4444");
             }
 
             setTimeout(() => {
-                if (gameActive) {
-                    mooruSprite.src = '../image/nyam2.png';
-                    popPoints.innerText = '';
-                    popPoints.className = 'floating-points';
-                }
+                if (gameActive) mooruSprite.src = '../image/nyam2(Happy).png';
             }, 1000);
+        }
+
+        function triggerFloatText(txt, color) {
+            floatText.innerText = txt;
+            floatText.style.color = color;
+            floatText.style.left = mooruX + '%';
+            floatText.classList.add('show-float');
+            setTimeout(() => floatText.classList.remove('show-float'), 800);
         }
 
         function updateScore(amount) {
@@ -104,9 +103,7 @@
             document.getElementById('score-val').innerText = score;
 
             if (score < 0) {
-                gameActive = false;
-                clearInterval(spawnInterval);
-                window.location.href = '../view/pageEmote_Happy3.html';
+                triggerGameOver();
                 return;
             }
 
@@ -116,14 +113,20 @@
                     currentWave++;
                     document.getElementById('wave-val').innerText = currentWave + '/3';
                     clearInterval(spawnInterval);
-                    startWave();
+                    startWave(); 
                 } else {
                     gameActive = false;
                     clearInterval(spawnInterval);
-                    alert("Sempurna! Kamu Berhasil Menyelesaikan Semua Tantangan Wave!");
+                    alert("Luar Biasa! Kamu memenangkan permainan!");
                     window.location.href = '../view/homePage.html';
                 }
             }
+        }
+
+        function triggerGameOver() {
+            gameActive = false;
+            clearInterval(spawnInterval);
+            window.location.href = '../view/pageEmote_Happy3.html';
         }
 
         function spawnFood() {
@@ -162,10 +165,10 @@
 
                         const isMatch = targetItems.some(t => t.name === randomItem.name);
                         if (isMatch) {
-                            changeExpression('like', '+5');
+                            changeExpression('like');
                             updateScore(5);
                         } else {
-                            changeExpression('dislike', '-5');
+                            changeExpression('dislike');
                             updateScore(-5);
                         }
                     }
@@ -177,7 +180,7 @@
 
                     const isMatch = targetItems.some(t => t.name === randomItem.name);
                     if (isMatch) {
-                        changeExpression('dislike', '-5');
+                        changeExpression('dislike');
                         updateScore(-5);
                     }
                 }

@@ -1,60 +1,112 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
 .fail-container {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, #0f172a, #1e293b);
+    text-align: center;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 20px;
+    background-image: url('../image/pc-bg_Happy.png');
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 768px) {
+    .fail-container {
+        background-image: url('../image/hp-bg_Happy.png');
+    }
 }
 
 .fail-title {
-    font-family: 'Press Start 2P', cursive;
-    font-size: clamp(32px, 6vw, 64px);
     color: #ef4444;
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    margin-bottom: 15px;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    margin-bottom: 10px;
 }
 
 .fail-subtitle {
-    color: #94a3b8;
-    font-size: 14px;
+    color: #e2e8f0;
+    font-size: 15px;
     margin-bottom: 30px;
+    max-width: 400px;
+    padding: 0 15px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.mooru-cry {
-    width: min(45vw, 240px);
-    height: auto;
-    animation: shaking-ew 0.25s infinite alternate;
+.avatar-container {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 40px;
 }
 
-@keyframes shaking-ew {
-    0% { transform: translate(2px, 2px) rotate(0deg); }
-    100% { transform: translate(-2px, -2px) rotate(-1.5deg); }
+.mooru-sick {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    animation: shake 0.5s infinite;
 }
 
-.button-group {
+.action-buttons {
     display: flex;
-    gap: 20px;
-    margin-top: 40px;
+    gap: 15px;
 }
 
-.btn-action {
-    font-family: 'Press Start 2P', cursive;
+.btn-retry, .btn-back-home {
+    display: inline-block;
+    padding: 12px 25px;
     text-decoration: none;
-    padding: 16px 24px;
-    font-size: 12px;
-    color: white;
-    border: 3px solid white;
-    border-radius: 10px;
-    transition: transform 0.1s ease;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
 }
 
-.btn-action:active {
-    transform: scale(0.95);
+.btn-retry {
+    background: #ffcc29;
+    color: #111;
 }
 
-.retry-btn { background: #22c55e; box-shadow: 0 5px 0 #16a34a; }
-.home-btn { background: #64748b; box-shadow: 0 5px 0 #475569; }
+.btn-back-home {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.4);
+    backdrop-filter: blur(5px);
+}
+
+.btn-retry:hover, .btn-back-home:hover {
+    transform: scale(1.05);
+}
+
+/* Animasi Berguncang */
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(2px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(2px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}

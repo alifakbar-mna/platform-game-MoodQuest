@@ -35,54 +35,6 @@
                 window.location.href = '../view/homePage.html';
             }, 500);
         }
-        
-        const bgMusic = new Audio("../audio/moodquest-bg.mp3");
-        bgMusic.loop = true;
-        bgMusic.volume = 0.4;
-
-        // restore state
-        const savedTime = localStorage.getItem("musicTime");
-        const isPlaying = localStorage.getItem("musicPlaying");
-
-        if (savedTime) {
-            bgMusic.currentTime = parseFloat(savedTime);
-        }
-
-        // fungsi sync state
-        function saveMusicState(){
-            localStorage.setItem("musicTime", bgMusic.currentTime);
-            localStorage.setItem("musicPlaying", "true");
-        }
-
-        // start music hanya setelah user interact
-        function startMusic(){
-            bgMusic.play().then(() => {
-                saveMusicState();
-            }).catch(()=>{});
-        }
-
-        // hanya sekali trigger
-        document.addEventListener("click", startMusic, { once: true });
-
-        // restore play state
-        window.addEventListener("load", () => {
-            if (isPlaying === "true") {
-                bgMusic.play().catch(()=>{});
-            }
-        });
-
-        // simpan progress berkala
-        setInterval(() => {
-            if (!bgMusic.paused) {
-                localStorage.setItem("musicTime", bgMusic.currentTime);
-                localStorage.setItem("musicPlaying", "true");
-            }
-        }, 500);
-
-        // save saat keluar halaman (IMPORTANT)
-        window.addEventListener("beforeunload", () => {
-            localStorage.setItem("musicTime", bgMusic.currentTime);
-        });
     </script>
 </body>
 </html>

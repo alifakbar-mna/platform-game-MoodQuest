@@ -1,0 +1,66 @@
+/* --- style-trial.css --- */
+.UI-layer {
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.trial-instruction {
+    background: rgba(255, 255, 255, 0.9);
+    border: 3px solid #4a3f35;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 10px;
+    color: #333;
+}
+
+.trial-instruction h2 { 
+    margin-bottom: 8px; 
+    font-size: 12px; 
+}
+
+.rules-list { 
+    margin-top: 10px; 
+    list-style: none; 
+}
+
+.rules-list li { 
+    margin: 5px 0; 
+}
+
+.plus { color: green; font-weight: bold; }
+.minus { color: red; font-weight: bold; }
+
+.game-playarea {
+    position: relative;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+}
+
+.arrow-indicator {
+    font-size: 30px;
+    color: #4a3f35;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.mooru-wrapper {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: left 0.1s ease-out;
+}
+
+.mooru-wrapper img {
+    width: 80px;
+    height: auto;
+}
+
+.action-bar {
+    text-align: center;
+    margin-bottom: 20px;
+}

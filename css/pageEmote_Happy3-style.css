@@ -1,0 +1,49 @@
+/* --- style-gameover.css --- */
+.status-container {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 4px solid #4a3f35;
+    padding: 40px;
+    margin: auto;
+}
+
+h1.text-danger {
+    font-size: 26px;
+    color: #d9534f;
+    text-shadow: 2px 2px #fff;
+    margin-bottom: 20px;
+}
+
+.status-desc {
+    font-size: 11px;
+    line-height: 1.8;
+    margin: 20px 0;
+    color: #5a4f45;
+}
+
+.mooru-sad {
+    width: 120px;
+    height: auto;
+}
+
+/* Animasi Guncang Mooru Sedih */
+.animate-shake {
+    animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(0px, 2px) rotate(0deg); }
+    50% { transform: translate(1px, -1px) rotate(1deg); }
+    70% { transform: translate(-1px, 1px) rotate(-1deg); }
+    100% { transform: translate(1px, -2px) rotate(0deg); }
+}
+
+.action-bar {
+    margin-top: 20px;
+}

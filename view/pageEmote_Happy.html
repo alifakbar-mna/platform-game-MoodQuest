@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Emotion Games - Trial</title>
+    <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
+</head>
+<body class="bg-pc">
+    <div class="game-container UI-layer">
+        <div class="trial-instruction">
+            <h2>Mode Latihan (Trial)</h2>
+            <p>Gunakan tombol <b>Panah Kiri / Kanan</b> atau <b>Hold & Geser Mouse/Sentuh</b> untuk menggerakkan Mooru di area karpet.</p>
+            <ul class="rules-list">
+                <li><span class="plus">+5 Poin</span> jika memakan makanan yang diminta di Sweets Bar.</li>
+                <li><span class="minus">-5 Poin</span> jika memakan makanan yang salah ATAU makanan yang diminta jatuh ke tanah.</li>
+            </ul>
+        </div>
+
+        <div class="game-playarea">
+            <div class="arrow-indicator left-arrow">←</div>
+            <div class="mooru-wrapper" id="trial-mooru-box">
+                <img src="mangap.png" id="mooru-sprite" alt="Mooru">
+            </div>
+            <div class="arrow-indicator right-arrow">→</div>
+        </div>
+
+        <div class="action-bar">
+            <a href="gamePage.html" class="btn-main pulse">Saya Mengerti, Mulai Game!</a>
+        </div>
+    </div>
+
+    <script>
+        // Simulasi pergerakan sederhana untuk mode trial menggunakan keyboard
+        const mooru = document.getElementById('trial-mooru-box');
+        let currentPos = 50; // dalam persen
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentPos > 25) {
+                currentPos -= 5;
+            } else if (e.key === 'ArrowRight' && currentPos < 75) {
+                currentPos += 5;
+            }
+            mooru.style.left = currentPos + '%';
+        });
+    </script>
+</body>
+</html>

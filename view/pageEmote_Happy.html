@@ -7,7 +7,20 @@
     <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
 </head>
 <body>
+    <!-- Fitur Pause Overlay -->
+    <div id="pauseOverlay" class="pause-overlay" onclick="togglePause()">
+        <div class="pause-content">
+            <p class="pause-title">GAME PAUSED</p>
+            <p class="pause-sub">Klik di mana saja untuk melanjutkan</p>
+        </div>
+    </div>
+
     <div class="game-container">
+        <!-- Tombol Pause di pojok atas -->
+        <button class="pause-btn" onclick="event.stopPropagation(); togglePause();" title="Pause">
+            <span class="pause-icon">||</span>
+        </button>
+
         <div class="game-hud">
             <div>SCORE: <span id="trial-score">0</span></div>
             <div>WAVE: 1/3</div>
@@ -15,8 +28,7 @@
 
         <div class="sweets-bar-wrapper" id="trial-sweets-bar">
             <img src="../image/sweets_bar.png" class="sweets-bar-bg" alt="Sweets Bar">
-            <div class="target-items-holder" id="trial-target-list">
-                </div>
+            <div class="target-items-holder" id="trial-target-list"></div>
         </div>
 
         <div class="instruction-box">
@@ -49,11 +61,13 @@
         const trialArena = document.getElementById('trial-arena');
         const trialScoreVal = document.getElementById('trial-score');
         const scoreFloat = document.getElementById('score-float');
+        const pauseOverlay = document.getElementById('pauseOverlay');
 
         let currentPos = 50; 
         let currentStep = 1;
         let hasMoved = false;
         let trialFoodTimer;
+        let isPaused = false; // State Pause
 
         // Inisialisasi 4 item acak untuk bar tutorial
         const allItems = ['../image/item1.png', '../image/item2.png', '../image/item3.png', '../image/item4.png', '../image/item5.png', '../image/item6.png'];
@@ -68,6 +82,8 @@
 
         // Kontrol Gerakan Langkah 1 & Langkah 4
         document.addEventListener('keydown', (e) => {
+            if (isPaused) return; // Mencegah gerak saat pause aktif
+
             if (currentStep === 1 || currentStep === 4) {
                 if (e.key === 'ArrowLeft' && currentPos > 20) {
                     currentPos -= 5;
@@ -85,6 +101,7 @@
         });
 
         nextBtn.addEventListener('click', () => {
+            if (isPaused) return;
             currentStep++;
             if (currentStep === 2) {
                 insTitle.innerText = "Langkah 2: Perhatikan Target";
@@ -106,6 +123,8 @@
 
         function startTrialSpawning() {
             trialFoodTimer = setInterval(() => {
+                if (isPaused) return; // Mencegah pembuatan makanan baru saat dijeda
+
                 const isTarget = Math.random() > 0.5;
                 const foodSrc = isTarget ? trialTargets[0] : allItems.find(x => !trialTargets.includes(x));
                 
@@ -118,6 +137,8 @@
 
                 let topPos = 0;
                 let fall = setInterval(() => {
+                    if (isPaused) return; // Menghentikan pergerakan jatuh saat dijeda
+
                     topPos += 4;
                     food.style.top = topPos + 'px';
 
@@ -128,7 +149,6 @@
                             clearInterval(fall);
                             food.remove();
                             
-                            // Feedback Visual sesuai Request
                             if (isTarget) {
                                 mooruSprite.src = '../image/nyam(Happy).png';
                                 trialScoreVal.innerText = "5";
@@ -159,6 +179,16 @@
             scoreFloat.style.color = color;
             scoreFloat.classList.add('show-float');
             setTimeout(() => scoreFloat.classList.remove('show-float'), 800);
+        }
+
+        // Fungsi Fitur Jeda (Pause)
+        function togglePause() {
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseOverlay.classList.add('active');
+            } else {
+                pauseOverlay.classList.remove('active');
+            }
         }
     </script>
 </body>

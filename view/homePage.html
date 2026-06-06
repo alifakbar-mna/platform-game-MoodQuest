@@ -16,6 +16,118 @@
 
 <body>
 
+    <!-- SETTINGS BUTTON -->
+    <button id="menuBtn" class="menu-btn">
+        ☰
+    </button>
+
+    <!-- SETTINGS PANEL -->
+    <div id="settingsPanel" class="settings-panel">
+
+        <div class="settings-header">
+            Settings
+        </div>
+
+        <div class="settings-content">
+
+            <div class="setting-item">
+                <span>🎵 Sound & Music</span>
+
+                <label class="switch">
+                    <input type="checkbox" id="musicToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <span>🌐 Language</span>
+
+                <select id="languageSelect">
+                    <option>Indonesia</option>
+                </select>
+            </div>
+
+            <div class="setting-item contact-item">
+                <span>📧 Contact Us</span>
+
+                <p>moodquest123@gmail.com</p>
+            </div>
+
+            <button class="premium-btn" id="premiumBtn">
+                ⭐ Start Your Journey
+                <br>
+                Rp30.000
+            </button>
+
+            <button class="donation-btn" id="donationBtn">
+                ❤️ Donation
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- PREMIUM MODAL -->
+    <div class="modal" id="premiumModal">
+
+        <div class="modal-content">
+
+            <h2>Start Your Journey</h2>
+
+            <p>
+                Unlock premium MoodQuest features.
+            </p>
+
+            <p>
+                Subscription: Rp30.000
+            </p>
+
+            <button onclick="closePremium()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- DONATION MODAL -->
+    <div class="modal" id="donationModal">
+
+        <div class="modal-content">
+
+            <h2>Donation</h2>
+
+            <input
+                type="text"
+                placeholder="Nama"
+                id="donationName"
+            >
+
+            <select id="paymentMethod">
+
+                <option>Transfer Bank</option>
+
+                <option>OVO</option>
+
+                <option>GoPay</option>
+
+                <option>DANA</option>
+
+            </select>
+
+            <button>
+                Submit
+            </button>
+
+            <button onclick="closeDonation()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+
     <!-- CHAT BUTTON -->
     <div class="chat-toggle" id="chatToggle">
         <img src="../image/maskot.png" alt="Mooru">
@@ -413,6 +525,40 @@ chatInput.addEventListener("keypress", (e) => {
         sendMessage();
     }
 });
+
+const menuBtn = document.getElementById("menuBtn");
+const settingsPanel = document.getElementById("settingsPanel");
+
+menuBtn.addEventListener("click", () => {
+
+    if(settingsPanel.style.display === "block"){
+        settingsPanel.style.display = "none";
+    }
+    else{
+        settingsPanel.style.display = "block";
+    }
+});
+
+const premiumModal = document.getElementById("premiumModal");
+const donationModal = document.getElementById("donationModal");
+
+document.getElementById("premiumBtn")
+.addEventListener("click", () => {
+    premiumModal.style.display = "flex";
+});
+
+document.getElementById("donationBtn")
+.addEventListener("click", () => {
+    donationModal.style.display = "flex";
+});
+
+function closePremium(){
+    premiumModal.style.display = "none";
+}
+
+function closeDonation(){
+    donationModal.style.display = "none";
+}
 
 </script>
 

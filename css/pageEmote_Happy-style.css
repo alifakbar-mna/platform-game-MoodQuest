@@ -26,12 +26,17 @@ body {
     }
 }
 
-/* HUD & Sweets Bar */
+/* ==========================================================================
+   HUD, PAUSE BUTTON, & SWEETS BAR (DIPERBAIKI)
+   ========================================================================== */
+
+/* Scorecard berada di KANAN POJOK ATAS */
 .game-hud {
-    position: absolute;
-    /* PINDAH KE KIRI BAWAH */
-    bottom: 20px;
-    left: 20px;
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+    bottom: auto !important;
+    left: auto !important;
     
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
@@ -39,14 +44,76 @@ body {
     border-radius: 8px;
     font-weight: bold;
     font-size: 18px;
-    z-index: 10;
+    z-index: 90;
 }
 
+/* Tombol Pause Awan berada di KANAN ATAS (Sebelah Kiri Scorecard) */
+.pause-btn {
+    position: absolute !important;
+    top: 20px !important;
+    right: 200px !important; /* Memberi jarak agar tidak menabrak kotak score */
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 100 !important;
+
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 65px;
+    height: 45px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.pause-btn::before, 
+.pause-btn::after {
+    content: "";
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+}
+
+.pause-btn::before { 
+    width: 30px; 
+    height: 30px; 
+    top: -12px; 
+    left: 10px; 
+}
+
+.pause-btn::after { 
+    width: 25px; 
+    height: 25px; 
+    top: -6px; 
+    right: 8px; 
+}
+
+.pause-icon {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    color: #1e293b;
+    z-index: 10; /* Menghindari ikon tertimbun lingkaran awan */
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.pause-btn:hover {
+    transform: scale(1.1);
+    filter: brightness(1.05);
+}
+
+.pause-btn:active {
+    transform: scale(0.95);
+}
+
+/* Papan Kayu Sweets Bar (Kiri Atas) */
 .sweets-bar-wrapper {
     position: absolute;
     top: -15px;
     left: 20px;
-    /* UKURAN BAR DIPERBESAR */
     width: 300px; 
     height: 150px;
     z-index: 10;
@@ -56,7 +123,6 @@ body {
 .sweets-bar-bg {
     width: 100%;
     height: 100%;
-    /* Memastikan asset gambar memenuhi area kontainer secara proporsional */
     object-fit: fill; 
 }
 
@@ -69,7 +135,6 @@ body {
 
 .target-items-holder {
     position: absolute;
-    /* Menggunakan top & left dalam persen agar pas di area kosong papan kayu */
     top: 20%;
     left: 12%;
     width: 80%;
@@ -77,15 +142,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 40px; /* Jarak antar item makanan sedikit diperlebar */
+    gap: 40px; 
 }
 
 .target-item-pic {
-    /* UKURAN ITEM MAKANAN DIPERBESAR */
     width: 30px;
     height: 30px;
     object-fit: contain;
 }
+
+/* ==========================================================================
+   INTERFACE & GAMEPLAY COMPONENTS
+   ========================================================================== */
 
 /* Kotak Instruksi / Thought Bubble */
 .instruction-box {
@@ -199,68 +267,45 @@ body {
 }
 
 /* ==========================================================================
-   FITUR PAUSE COMPONENT STYLING 
+   FITUR PAUSE OVERLAY STYLING 
    ========================================================================== */
-
-/* Tombol Pause Bentuk Awan */
-.pause-btn {
-    /* UBAH KE ABSOLUTE DAN ATUR KOORDINATNYA */
-    position: absolute !important;
-    top: 20px !important;
-    right: 200px !important; /* Memberi jarak 200px dari kanan agar tidak menabrak scorecard */
-    z-index: 100 !important; /* Memastikan awan berada di lapisan paling atas */
-
-    background: rgba(255, 255, 255, 0.95);
-    border: none;
-    width: 65px;
-    height: 45px;
-    border-radius: 20px;
-    cursor: pointer;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-    transition: transform 0.2s ease, filter 0.2s ease;
+.pause-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-.pause-btn::before,
-.pause-btn::after {
-    content: "";
-    position: absolute;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 50%;
+.pause-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-.pause-btn::before {
-    width: 30px;
-    height: 30px;
-    top: -12px;
-    left: 10px;
+.pause-content {
+    text-align: center;
+    background: rgba(15, 23, 42, 0.9);
+    border: 3px solid white;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.pause-btn::after {
-    width: 25px;
-    height: 25px;
-    top: -6px;
-    right: 8px;
-}
-
-.pause-icon {
+.pause-title {
     font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #e2e8f0;
+    margin-bottom: 15px;
+}
+
+.pause-sub {
     font-size: 14px;
-    color: #1e293b;
-    /* Naikkan z-index ikon agar tidak tertutup bulatan pseudo-element awan */
-    z-index: 10; 
-    font-weight: bold;
-    letter-spacing: -1px;
-}
-
-.pause-btn:hover {
-    /* Gabungkan scale bawaan hover dengan translate jika diperlukan, atau cukup scale saja */
-    transform: scale(1.1);
-    filter: brightness(1.05);
-}
-
-.pause-btn:active {
-    transform: scale(0.95);
+    color: #94a3b8;
 }

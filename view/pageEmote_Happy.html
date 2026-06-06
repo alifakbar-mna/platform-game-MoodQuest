@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Emotion Games - Trial</title>
-    <link rel="stylesheet" href="style-base.css">
     <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
 </head>
 <body>
@@ -93,7 +92,7 @@
 
         function simulateEat(isCorrect) {
             if (isCorrect) {
-                mooruImg.src = '../image/nyam.png';
+                mooruImg.src = '../image/nyam(Happy).png';
                 pointsEffect.innerText = '+5';
                 pointsEffect.className = 'floating-points plus-pop';
                 document.getElementById('trial-score').innerText = '5';
@@ -105,7 +104,7 @@
             }
             
             setTimeout(() => {
-                mooruImg.src = '../image/nyam2.png';
+                mooruImg.src = '../image/nyam2(Happy).png';
                 pointsEffect.innerText = '';
                 pointsEffect.className = 'floating-points';
             }, 1000);

@@ -42,7 +42,7 @@ body {
 
 .sweets-bar-wrapper {
     position: absolute;
-    top: 20px;
+    top: -15px;
     left: 20px;
     /* UKURAN BAR DIPERBESAR */
     width: 320px; 
@@ -68,20 +68,20 @@ body {
 .target-items-holder {
     position: absolute;
     /* Menggunakan top & left dalam persen agar pas di area kosong papan kayu */
-    top: 45%;
+    top: 20%;
     left: 12%;
     width: 80%;
     height: 50%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 5px; /* Jarak antar item makanan sedikit diperlebar */
+    gap: 40px; /* Jarak antar item makanan sedikit diperlebar */
 }
 
 .target-item-pic {
     /* UKURAN ITEM MAKANAN DIPERBESAR */
-    width: 90px;
-    height: 90px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
 }
 

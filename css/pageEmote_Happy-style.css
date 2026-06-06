@@ -44,8 +44,9 @@ body {
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 260px;
-    height: 80px;
+    /* UKURAN BAR DIPERBESAR */
+    width: 320px; 
+    height: 100px;
     z-index: 10;
     transition: transform 0.3s ease, border 0.3s ease;
 }
@@ -53,27 +54,34 @@ body {
 .sweets-bar-bg {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    /* Memastikan asset gambar memenuhi area kontainer secara proporsional */
+    object-fit: fill; 
 }
 
 .highlight-bar {
-    transform: scale(1.1);
+    transform: scale(1.05);
     outline: 4px solid #ffcc29;
-    border-radius: 10px;
+    border-radius: 12px;
     background: rgba(255, 204, 41, 0.2);
 }
 
 .target-items-holder {
     position: absolute;
-    top: 35px;
-    left: 25px;
+    /* Menggunakan top & left dalam persen agar pas di area kosong papan kayu */
+    top: 42%;
+    left: 12%;
+    width: 80%;
+    height: 50%;
     display: flex;
-    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px; /* Jarak antar item makanan sedikit diperlebar */
 }
 
 .target-item-pic {
-    width: 35px;
-    height: 35px;
+    /* UKURAN ITEM MAKANAN DIPERBESAR */
+    width: 45px;
+    height: 45px;
     object-fit: contain;
 }
 

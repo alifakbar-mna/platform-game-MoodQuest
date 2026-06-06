@@ -34,6 +34,50 @@ body {
 }
 
 /* ========================================= */
+/* PAUSE OVERLAY */
+/* ========================================= */
+.pause-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.pause-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pause-content {
+    text-align: center;
+    background: rgba(15, 23, 42, 0.9);
+    border: 3px solid white;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.pause-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #e2e8f0;
+    margin-bottom: 15px;
+}
+
+.pause-sub {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+/* ========================================= */
 /* HEADER (TITLE & PAUSE BUTTON) */
 /* ========================================= */
 .game-header {
@@ -71,7 +115,7 @@ body {
     align-items: center;
 }
 
-/* Efek tonjolan awan bulatan kecil disekitarnya */
+
 .pause-btn::before,
 .pause-btn::after {
     content: "";
@@ -79,12 +123,14 @@ body {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 50%;
 }
+
 .pause-btn::before {
     width: 30px;
     height: 30px;
     top: -12px;
     left: 10px;
 }
+
 .pause-btn::after {
     width: 25px;
     height: 25px;
@@ -178,7 +224,9 @@ body {
     background: linear-gradient(to bottom, #ffe27a, #f59e0b);
     color: #1e293b;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 -2px 0 rgba(0,0,0,0.2);
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.3),
+        inset 0 -2px 0 rgba(0,0,0,0.2);
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 
@@ -195,6 +243,10 @@ body {
 /* ANIMATIONS */
 /* ========================================= */
 @keyframes sideToSide {
-    0%, 100% { transform: translateX(-8px) rotate(-2deg); }
-    50% { transform: translateX(8px) rotate(2deg); }
+    0%, 100% {
+        transform: translateX(-8px) rotate(-2deg);
+    }
+    50% {
+        transform: translateX(8px) rotate(2deg);
+    }
 }

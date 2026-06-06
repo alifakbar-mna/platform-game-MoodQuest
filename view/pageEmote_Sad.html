@@ -1,58 +1,91 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoodQuest - Happy Quest</title>
-    
+    <title>MoodQuest - Pat Mooru</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="../css/pageEmote_Sad-style.css">
 </head>
 <body>
 
+    <!-- PAUSE OVERLAY -->
+    <div id="pauseOverlay" class="pause-overlay" onclick="togglePause()">
+        <div class="pause-content">
+            <p class="pause-title">GAME PAUSED</p>
+            <p class="pause-sub">Klik di mana saja untuk melanjutkan</p>
+        </div>
+    </div>
+
+    <!-- HEADER -->
     <header class="game-header">
-        <h1 class="emotion-title">Happy</h1>
-        
-        <button class="pause-btn" onclick="togglePause()" title="Pause">
+        <h1 class="emotion-title">Sad</h1>
+
+        <button
+            class="pause-btn"
+            onclick="event.stopPropagation(); togglePause();"
+            title="Pause">
+
             <span class="pause-icon">||</span>
         </button>
     </header>
 
+    <!-- MAIN CONTENT -->
     <main class="instruction-container">
-        
+
         <div class="swipe-arrow-wrapper">
-            <svg class="swipe-arrow" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 20 70 Q 100 10 180 70" stroke="white" stroke-width="4" stroke-dasharray="8 6" fill="none" />
-                <path d="M 25 50 L 20 70 L 42 68" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-                <path d="M 175 50 L 180 70 L 158 68" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            </svg>
+            <img
+                src="../image/swipe-arrow.png"
+                alt="Swipe Arrow"
+                class="swipe-arrow">
         </div>
 
-        <h2 class="action-text">Pat!</h2>
+        <h2 class="action-text">PAT!</h2>
+
         <p class="sub-instruction">
-            swipe left and right repeatedly<br>across mooru's body
+            swipe left and right repeatedly<br>
+            to comfort mooru and make<br>
+            him feel better
         </p>
 
     </main>
 
+    <!-- FOOTER -->
     <footer class="game-footer">
-        <button class="next-btn-corner" onclick="goToNextPage()">NEXT</button>
+
+        <button
+            class="next-btn-corner"
+            onclick="goNextPage()">
+
+            NEXT
+        </button>
+
     </footer>
 
     <script>
+        let isPaused = false;
+
+        const pauseOverlay = document.getElementById('pauseOverlay');
+
         function togglePause() {
-            alert("Game Paused ⏸️");
-            // Di sini kamu bisa tambahkan logika pop-up menu pause nanti jika diperlukan
+            isPaused = !isPaused;
+
+            if (isPaused) {
+                pauseOverlay.classList.add('active');
+            } else {
+                pauseOverlay.classList.remove('active');
+            }
         }
 
-        function goToNextPage() {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => {
-                window.location.href = '../view/pageEmote_Sad2.html';
-            }, 500);
+        function goNextPage() {
+            if (isPaused) return;
+
+            window.location.href = "pageEmote_Sad2.html";
         }
     </script>
+
 </body>
 </html>

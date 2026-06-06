@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Emotion Games - Playing</title>
     <link rel="stylesheet" href="style-base.css">
-    <link rel="stylesheet" href="pageEmote_Happy2-style.css">
+    <link rel="stylesheet" href="../css/pageEmote_Happy2-style.css">
 </head>
 <body>
     <div class="game-container" id="arena-container">
@@ -106,7 +106,7 @@
             if (score < 0) {
                 gameActive = false;
                 clearInterval(spawnInterval);
-                window.location.href = 'pageEmote_Happy3.html';
+                window.location.href = '../view/pageEmote_Happy3.html';
                 return;
             }
 
@@ -121,7 +121,7 @@
                     gameActive = false;
                     clearInterval(spawnInterval);
                     alert("Sempurna! Kamu Berhasil Menyelesaikan Semua Tantangan Wave!");
-                    window.location.href = 'homePage.html';
+                    window.location.href = '../view/homePage.html';
                 }
             }
         }

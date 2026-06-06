@@ -1,3 +1,20 @@
+/* --- Bagian yang Diperbaiki --- */
+
+.highlight-box {
+    outline: 4px solid #facc15;
+    outline-offset: 4px; /* Memberikan jarak halus antara border dan layout */
+    box-shadow: 0 0 25px #facc15;
+    animation: pulseHighlight 1.5s infinite alternate;
+    z-index: 90; /* Memastikan elemen yang di-highlight naik ke atas */
+}
+
+/* Animasi opsional agar highlight berkedip pelan menarik perhatian */
+@keyframes pulseHighlight {
+    from { box-shadow: 0 0 15px #facc15; }
+    to { box-shadow: 0 0 30px #facc15; }
+}
+
+/* --- Sisa CSS yang Lain Tetap Sama --- */
 .thought-bubble {
     position: absolute;
     top: 25%;
@@ -47,14 +64,6 @@
 .btn-sim.correct { background-color: #22c55e; }
 .btn-sim.wrong { background-color: #ef4444; }
 
-.highlight-box {
-    outline: 4px solid #facc15;
-    box-shadow: 0 0 20px #facc15;
-    transform: scale(1.03) translateX(-50%);
-    transform-origin: left;
-    background: rgba(15, 23, 42, 1) !important;
-}
-
 .start-btn-area {
     position: absolute;
     bottom: 14vh;
@@ -63,7 +72,6 @@
     z-index: 100;
 }
 
-/* Animasi Pop Angka Poin */
 .floating-points {
     position: absolute;
     top: -40px;

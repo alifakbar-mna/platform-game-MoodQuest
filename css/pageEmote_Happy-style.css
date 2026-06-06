@@ -68,7 +68,7 @@ body {
 .target-items-holder {
     position: absolute;
     /* Menggunakan top & left dalam persen agar pas di area kosong papan kayu */
-    top: 42%;
+    top: 45%;
     left: 12%;
     width: 80%;
     height: 50%;
@@ -80,8 +80,8 @@ body {
 
 .target-item-pic {
     /* UKURAN ITEM MAKANAN DIPERBESAR */
-    width: 45px;
-    height: 45px;
+    width: 90px;
+    height: 90px;
     object-fit: contain;
 }
 

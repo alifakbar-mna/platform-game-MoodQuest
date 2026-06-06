@@ -204,45 +204,16 @@ body {
    FITUR PAUSE COMPONENT STYLING 
    ========================================================================== */
 
-/* Tombol Pause */
-.pause-btn {
-    position: absolute;
-    top: 20px;
-    right: 200px; /* Jarak aman dari HUD Score di pojok kanan */
-    background: #ffcc29;
-    border: 3px solid #111;
-    color: #111;
-    border-radius: 8px;
-    padding: 8px 15px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 100;
-    box-shadow: 0 4px 0 #111;
-    transition: transform 0.1s;
-}
-
-.pause-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 #111;
-}
-
-.pause-icon {
-    letter-spacing: -1px;
-}
-
-/* Overlay Jeda */
 .pause-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.75);
+    inset: 0;
+    background: rgba(30, 41, 59, 0.75);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -255,21 +226,21 @@ body {
 
 .pause-content {
     text-align: center;
-    background: white;
-    border: 4px solid #ffcc29;
+    background: rgba(15, 23, 42, 0.9);
+    border: 3px solid white;
     padding: 30px 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 .pause-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #ef4444;
-    margin-bottom: 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #e2e8f0;
+    margin-bottom: 15px;
 }
 
 .pause-sub {
     font-size: 14px;
-    color: #555;
+    color: #94a3b8;
 }

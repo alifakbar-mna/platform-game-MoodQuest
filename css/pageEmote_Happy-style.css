@@ -45,8 +45,8 @@ body {
     top: -15px;
     left: 20px;
     /* UKURAN BAR DIPERBESAR */
-    width: 320px; 
-    height: 100px;
+    width: 380px; 
+    height: 150px;
     z-index: 10;
     transition: transform 0.3s ease, border 0.3s ease;
 }
@@ -80,8 +80,8 @@ body {
 
 .target-item-pic {
     /* UKURAN ITEM MAKANAN DIPERBESAR */
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     object-fit: contain;
 }
 

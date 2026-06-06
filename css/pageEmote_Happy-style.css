@@ -29,8 +29,12 @@ body {
 /* HUD & Sweets Bar */
 .game-hud {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    /* MEMINDAHKAN ELEMEN KE POJOK KIRI BAWAH */
+    bottom: 20px;
+    left: 20px;
+    top: auto;   /* Meriset posisi top sebelumnya jika ada */
+    right: auto; /* Meriset posisi right sebelumnya jika ada */
+    
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 10px 20px;

@@ -3,111 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Emotion Games - Trial</title>
+    <title>Happy Emotion Games - Trial Mode</title>
     <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
 </head>
 <body>
     <div class="game-container">
-        
-        <div class="game-hud" id="hud-preview">
-            <div class="score-board">SCORE: <span id="trial-score">0</span></div>
-            <div class="wave-board">WAVE: 1/3</div>
+        <div class="game-hud">
+            <div>SCORE: <span id="trial-score">0</span></div>
+            <div>WAVE: 1/3</div>
         </div>
 
-        <div class="sweets-bar-wrapper" id="sweets-preview">
-            <div class="sweets-box">
-                <img src="../image/sweets_bar.png" class="bar-decor" alt="Bar">
-                <span class="sweets-title">TARGET:</span>
-                <div class="target-items-holder">
-                    <img src="../image/item1.png" class="target-item-pic">
-                    <img src="../image/item3.png" class="target-item-pic">
-                    <img src="../image/item4.png" class="target-item-pic">
-                    <img src="../image/item6.png" class="target-item-pic">
+        <div class="sweets-bar-wrapper" id="trial-sweets-bar">
+            <img src="../image/sweets_bar.png" class="sweets-bar-bg" alt="Sweets Bar">
+            <div class="target-items-holder" id="trial-target-list">
                 </div>
-            </div>
         </div>
 
-        <div class="thought-bubble show" id="guide-bubble">
-            <p id="guide-text"><b>Langkah 1:</b> Gunakan tombol PANAH KANAN / KIRI di keyboard untuk menggeser Mooru!</p>
-            <div class="tutorial-actions" id="trial-actions-area"></div>
-            <button class="btn-next-step" onclick="nextTutorialStep()">Lanjut &rarr;</button>
+        <div class="instruction-box">
+            <h2 id="instruction-title">Langkah 1: Gerakan Mooru</h2>
+            <p id="instruction-text">Gunakan tombol PANAH KANAN / KIRI pada keyboard untuk menggeser Mooru (nyam2.png) mendekati makanan!</p>
+            <button id="next-step-btn" class="btn-next" style="display: none;">Lanjut</button>
         </div>
+
+        <div id="score-float" class="score-float"></div>
 
         <div class="character-wrapper" id="trial-mooru-container">
-            <div class="floating-points" id="points-effect"></div>
             <img src="../image/nyam2(Happy).png" class="character" id="trial-mooru" alt="Mooru">
         </div>
 
-        <div class="start-btn-area" id="start-game-area" style="display: none;">
+        <div id="trial-arena"></div>
+
+        <div class="nav-container">
             <a href="../view/pageEmote_Happy2.html" class="btn-main">Mulai Game Utama</a>
         </div>
-
-        <div class="picnic-mat"></div>
     </div>
 
     <script>
-        let currentStep = 1;
         const mooruContainer = document.getElementById('trial-mooru-container');
-        const mooruImg = document.getElementById('trial-mooru');
-        const guideText = document.getElementById('guide-text');
-        const actionsArea = document.getElementById('trial-actions-area');
-        const sweetsPreview = document.getElementById('sweets-preview');
-        const hudPreview = document.getElementById('hud-preview');
-        const pointsEffect = document.getElementById('points-effect');
-        let currentPos = 50;
+        const mooruSprite = document.getElementById('trial-mooru');
+        const sweetsBar = document.getElementById('trial-sweets-bar');
+        const targetList = document.getElementById('trial-target-list');
+        const nextBtn = document.getElementById('next-step-btn');
+        const insTitle = document.getElementById('instruction-title');
+        const insText = document.getElementById('instruction-text');
+        const trialArena = document.getElementById('trial-arena');
+        const trialScoreVal = document.getElementById('trial-score');
+        const scoreFloat = document.getElementById('score-float');
 
-        // Gerakan Mooru
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' && currentPos > 20) currentPos -= 5;
-            if (e.key === 'ArrowRight' && currentPos < 80) currentPos += 5;
-            mooruContainer.style.left = currentPos + '%';
+        let currentPos = 50; 
+        let currentStep = 1;
+        let hasMoved = false;
+        let trialFoodTimer;
+
+        // Inisialisasi 4 item acak untuk bar tutorial
+        const allItems = ['../image/item1.png', '../image/item2.png', '../image/item3.png', '../image/item4.png', '../image/item5.png', '../image/item6.png'];
+        const trialTargets = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 4);
+        
+        trialTargets.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.classList.add('target-item-pic');
+            targetList.appendChild(img);
         });
 
-        function nextTutorialStep() {
+        // Kontrol Gerakan Langkah 1 & Langkah 4
+        document.addEventListener('keydown', (e) => {
+            if (currentStep === 1 || currentStep === 4) {
+                if (e.key === 'ArrowLeft' && currentPos > 20) {
+                    currentPos -= 5;
+                    hasMoved = true;
+                } else if (e.key === 'ArrowRight' && currentPos < 80) {
+                    currentPos += 5;
+                    hasMoved = true;
+                }
+                mooruContainer.style.left = currentPos + '%';
+
+                if (currentStep === 1 && hasMoved) {
+                    nextBtn.style.display = 'inline-block';
+                }
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
             currentStep++;
             if (currentStep === 2) {
-                sweetsPreview.classList.add('highlight-box');
-                guideText.innerHTML = "<b>Langkah 2:</b> Perhatikan <b>sweets_bar.png</b> di atas! 4 item target akan diacak dari total 6 pilihan makanan. Mooru hanya boleh memakan item yang tampil di bar ini!";
-            } 
-            else if (currentStep === 3) {
-                sweetsPreview.classList.remove('highlight-box');
-                hudPreview.classList.add('highlight-box');
-                guideText.innerHTML = "<b>Langkah 3:</b> Lihat papan skor di pojok kiri atas. Jika <b>Benar</b> mendapat <span style='color:#4ade80'>+5</span> poin. Jika <b>Salah / Makanan Target Lolos</b> akan dikurangi <span style='color:#f87171'>-5</span> poin.";
-            } 
-            else if (currentStep === 4) {
-                hudPreview.classList.remove('highlight-box');
-                guideText.innerHTML = "<b>Langkah 4:</b> Ayo coba simulasi makan! Klik tombol di bawah ini untuk melihat reaksi ekspresi Mooru:";
-                
-                // Tambah tombol simulasi reaksi
-                actionsArea.innerHTML = `
-                    <button class="btn-sim correct" onclick="simulateEat(true)">Coba Makan Benar</button>
-                    <button class="btn-sim wrong" onclick="simulateEat(false)">Coba Makan Salah</button>
-                `;
-                
-                // Munculkan tombol ke game utama
-                document.getElementById('start-game-area').style.display = 'block';
-                document.querySelector('.btn-next-step').style.display = 'none';
+                insTitle.innerText = "Langkah 2: Perhatikan Target";
+                insText.innerText = "Lihat bar di kiri atas (sweets_bar.png). Mooru hanya boleh memakan 4 makanan acak yang tertera di sana!";
+                sweetsBar.classList.add('highlight-bar');
+                nextBtn.style.display = 'inline-block';
+            } else if (currentStep === 3) {
+                sweetsBar.classList.remove('highlight-bar');
+                insTitle.innerText = "Langkah 3: Perhitungan Poin";
+                insText.innerText = "Jika BENAR memakan item target: +5 Poin. Jika SALAH memakan atau target LOLOS: -5 Poin!";
+                nextBtn.style.display = 'inline-block';
+            } else if (currentStep === 4) {
+                insTitle.innerText = "Langkah 4: Uji Coba Makan";
+                insText.innerText = "Ayo coba tangkap makanan yang jatuh sekarang!";
+                nextBtn.style.display = 'none';
+                startTrialSpawning();
             }
+        });
+
+        function startTrialSpawning() {
+            trialFoodTimer = setInterval(() => {
+                const isTarget = Math.random() > 0.5;
+                const foodSrc = isTarget ? trialTargets[0] : allItems.find(x => !trialTargets.includes(x));
+                
+                const food = document.createElement('img');
+                food.src = foodSrc;
+                food.classList.add('falling-food');
+                food.style.left = (Math.random() * (75 - 25) + 25) + '%';
+                food.style.top = '0px';
+                trialArena.appendChild(food);
+
+                let topPos = 0;
+                let fall = setInterval(() => {
+                    topPos += 4;
+                    food.style.top = topPos + 'px';
+
+                    let arenaH = trialArena.clientHeight || 400;
+                    if (topPos >= arenaH - 120 && topPos <= arenaH - 60) {
+                        let foodX = parseFloat(food.style.left);
+                        if (Math.abs(foodX - currentPos) < 8) {
+                            clearInterval(fall);
+                            food.remove();
+                            
+                            // Feedback Visual sesuai Request
+                            if (isTarget) {
+                                mooruSprite.src = '../image/nyam(Happy).png';
+                                trialScoreVal.innerText = "5";
+                                triggerFloatText("+5", "#4ade80");
+                            } else {
+                                mooruSprite.src = '../image/ew.png';
+                                trialScoreVal.innerText = "-5";
+                                triggerFloatText("-5", "#ef4444");
+                            }
+
+                            setTimeout(() => {
+                                mooruSprite.src = '../image/nyam2(Happy).png';
+                            }, 1000);
+                        }
+                    }
+
+                    if (topPos > arenaH) {
+                        clearInterval(fall);
+                        food.remove();
+                    }
+                }, 20);
+
+            }, 2500);
         }
 
-        function simulateEat(isCorrect) {
-            if (isCorrect) {
-                mooruImg.src = '../image/nyam(Happy).png';
-                pointsEffect.innerText = '+5';
-                pointsEffect.className = 'floating-points plus-pop';
-                document.getElementById('trial-score').innerText = '5';
-            } else {
-                mooruImg.src = '../image/ew.png';
-                pointsEffect.innerText = '-5';
-                pointsEffect.className = 'floating-points minus-pop';
-                document.getElementById('trial-score').innerText = '-5';
-            }
-            
-            setTimeout(() => {
-                mooruImg.src = '../image/nyam2(Happy).png';
-                pointsEffect.innerText = '';
-                pointsEffect.className = 'floating-points';
-            }, 1000);
+        function triggerFloatText(txt, color) {
+            scoreFloat.innerText = txt;
+            scoreFloat.style.color = color;
+            scoreFloat.classList.add('show-float');
+            setTimeout(() => scoreFloat.classList.remove('show-float'), 800);
         }
     </script>
 </body>

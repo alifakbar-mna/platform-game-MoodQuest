@@ -1,92 +1,189 @@
-/* --- Bagian yang Diperbaiki --- */
-
-.highlight-box {
-    outline: 4px solid #facc15;
-    outline-offset: 4px; /* Memberikan jarak halus antara border dan layout */
-    box-shadow: 0 0 25px #facc15;
-    animation: pulseHighlight 1.5s infinite alternate;
-    z-index: 90; /* Memastikan elemen yang di-highlight naik ke atas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Animasi opsional agar highlight berkedip pelan menarik perhatian */
-@keyframes pulseHighlight {
-    from { box-shadow: 0 0 15px #facc15; }
-    to { box-shadow: 0 0 30px #facc15; }
+body {
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    background-color: #1e1e24;
 }
 
-/* --- Sisa CSS yang Lain Tetap Sama --- */
-.thought-bubble {
+/* Responsivitas Background Berdasarkan Perangkat */
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../image/pc-bg_Happy.png');
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 768px) {
+    .game-container {
+        background-image: url('../image/hp-bg_Happy.png');
+    }
+}
+
+/* HUD & Sweets Bar */
+.game-hud {
     position: absolute;
-    top: 25%;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 10;
+}
+
+.sweets-bar-wrapper {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 260px;
+    height: 80px;
+    z-index: 10;
+    transition: transform 0.3s ease, border 0.3s ease;
+}
+
+.sweets-bar-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.highlight-bar {
+    transform: scale(1.1);
+    outline: 4px solid #ffcc29;
+    border-radius: 10px;
+    background: rgba(255, 204, 41, 0.2);
+}
+
+.target-items-holder {
+    position: absolute;
+    top: 35px;
+    left: 25px;
+    display: flex;
+    gap: 8px;
+}
+
+.target-item-pic {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
+/* Kotak Instruksi / Thought Bubble */
+.instruction-box {
+    position: absolute;
+    top: 130px;
     left: 50%;
     transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid #ffcc29;
+    border-radius: 15px;
+    padding: 15px 25px;
     width: 90%;
     max-width: 500px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.98);
-    color: #1e293b;
-    border-radius: 20px;
-    font-size: 14px;
-    line-height: 1.6;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    z-index: 80;
     text-align: center;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    z-index: 20;
 }
 
-.btn-next-step {
-    margin-top: 15px;
-    padding: 8px 16px;
-    background: #1e293b;
-    color: white;
+.instruction-box h2 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.instruction-box p {
+    font-size: 14px;
+    color: #555;
+}
+
+.btn-next {
+    margin-top: 10px;
+    background: #ffcc29;
     border: none;
-    border-radius: 8px;
+    padding: 6px 15px;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
 }
 
-.tutorial-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 12px;
-}
-
-.btn-sim {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 11px;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-}
-
-.btn-sim.correct { background-color: #22c55e; }
-.btn-sim.wrong { background-color: #ef4444; }
-
-.start-btn-area {
+/* Karakter Mooru */
+.character-wrapper {
     position: absolute;
-    bottom: 14vh;
+    bottom: 8vh;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100;
+    width: 100px;
+    height: 100px;
+    z-index: 5;
+    transition: left 0.1s ease-out;
 }
 
-.floating-points {
+.character {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Simulasi Makanan */
+#trial-arena {
     position: absolute;
-    top: -40px;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.falling-food {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+/* Efek Floating Text */
+.score-float {
+    position: absolute;
+    bottom: 22vh;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     opacity: 0;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    z-index: 15;
 }
-.plus-pop { color: #22c55e; animation: popUp 1s ease-out; }
-.minus-pop { color: #ef4444; animation: popUp 1s ease-out; }
 
-@keyframes popUp {
-    0% { opacity: 0; transform: translate(-50%, 0); }
-    30% { opacity: 1; transform: translate(-50%, -20px); }
-    100% { opacity: 0; transform: translate(-50%, -40px); }
+.score-float.show-float {
+    opacity: 1;
+    transform: translate(-50%, -30px);
+}
+
+/* Navigasi Utama */
+.nav-container {
+    position: absolute;
+    bottom: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.btn-main {
+    display: inline-block;
+    background: #4ade80;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }

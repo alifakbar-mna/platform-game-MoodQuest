@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Emotion Games - Game Over</title>
-    <link rel="stylesheet" href="../css/pageEmote_Happy3-style.csscss">
+    <link rel="stylesheet" href="style-base.css">
+    <link rel="stylesheet" href="pageEmote_Happy3-style.css">
 </head>
-<body class="bg-pc">
-    <div class="game-container status-container">
-        <h1 class="text-danger">YAAH, GAGAL!</h1>
-        <div class="character-preview">
-            <img src="sad.png" alt="Mooru Sedih" class="mooru-sad animate-shake">
+<body>
+    <div class="fail-container">
+        
+        <h1 class="fail-title">GAME OVER</h1>
+        <p class="fail-subtitle">Skor kamu habis! Mooru merasa mual atau kelaparan...</p>
+
+        <div class="character-box">
+            <img src="../image/ew.png" class="mooru-cry" alt="Mooru Mual">
         </div>
-        <p class="status-desc">Skormu turun di bawah batas aman. Mooru kelaparan atau memakan makanan yang salah!</p>
-        <div class="action-bar">
-            <a href="homePage.html" class="btn-main btn-retry">Back to Home</a>
+
+        <div class="button-group">
+            <a href="pageEmote_Happy2.html" class="btn-action retry-btn">Main Lagi</a>
+            <a href="homePage.html" class="btn-action home-btn">Back to Home</a>
         </div>
+
     </div>
 </body>
 </html>

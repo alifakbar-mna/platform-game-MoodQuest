@@ -4,45 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Emotion Games - Trial</title>
+    <link rel="stylesheet" href="style-base.css">
     <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
 </head>
-<body class="bg-pc">
-    <div class="game-container UI-layer">
-        <div class="trial-instruction">
-            <h2>Mode Latihan (Trial)</h2>
-            <p>Gunakan tombol <b>Panah Kiri / Kanan</b> atau <b>Hold & Geser Mouse/Sentuh</b> untuk menggerakkan Mooru di area karpet.</p>
-            <ul class="rules-list">
-                <li><span class="plus">+5 Poin</span> jika memakan makanan yang diminta di Sweets Bar.</li>
-                <li><span class="minus">-5 Poin</span> jika memakan makanan yang salah ATAU makanan yang diminta jatuh ke tanah.</li>
-            </ul>
+<body>
+    <div class="game-container">
+        
+        <div class="game-hud" id="hud-preview">
+            <div class="score-board">SCORE: <span id="trial-score">0</span></div>
+            <div class="wave-board">WAVE: 1/3</div>
         </div>
 
-        <div class="game-playarea">
-            <div class="arrow-indicator left-arrow">←</div>
-            <div class="mooru-wrapper" id="trial-mooru-box">
-                <img src="mangap.png" id="mooru-sprite" alt="Mooru">
+        <div class="sweets-bar-wrapper" id="sweets-preview">
+            <div class="sweets-box">
+                <img src="../image/sweets_bar.png" class="bar-decor" alt="Bar">
+                <span class="sweets-title">TARGET:</span>
+                <div class="target-items-holder">
+                    <img src="../image/item1.png" class="target-item-pic">
+                    <img src="../image/item3.png" class="target-item-pic">
+                    <img src="../image/item4.png" class="target-item-pic">
+                    <img src="../image/item6.png" class="target-item-pic">
+                </div>
             </div>
-            <div class="arrow-indicator right-arrow">→</div>
         </div>
 
-        <div class="action-bar">
-            <a href="gamePage.html" class="btn-main pulse">Saya Mengerti, Mulai Game!</a>
+        <div class="thought-bubble show" id="guide-bubble">
+            <p id="guide-text"><b>Langkah 1:</b> Gunakan tombol PANAH KANAN / KIRI di keyboard untuk menggeser Mooru!</p>
+            <div class="tutorial-actions" id="trial-actions-area"></div>
+            <button class="btn-next-step" onclick="nextTutorialStep()">Lanjut &rarr;</button>
         </div>
+
+        <div class="character-wrapper" id="trial-mooru-container">
+            <div class="floating-points" id="points-effect"></div>
+            <img src="../image/nyam2.png" class="character" id="trial-mooru" alt="Mooru">
+        </div>
+
+        <div class="start-btn-area" id="start-game-area" style="display: none;">
+            <a href="../view/pageEmote_Happy2.html" class="btn-main">Mulai Game Utama</a>
+        </div>
+
+        <div class="picnic-mat"></div>
     </div>
 
     <script>
-        // Simulasi pergerakan sederhana untuk mode trial menggunakan keyboard
-        const mooru = document.getElementById('trial-mooru-box');
-        let currentPos = 50; // dalam persen
+        let currentStep = 1;
+        const mooruContainer = document.getElementById('trial-mooru-container');
+        const mooruImg = document.getElementById('trial-mooru');
+        const guideText = document.getElementById('guide-text');
+        const actionsArea = document.getElementById('trial-actions-area');
+        const sweetsPreview = document.getElementById('sweets-preview');
+        const hudPreview = document.getElementById('hud-preview');
+        const pointsEffect = document.getElementById('points-effect');
+        let currentPos = 50;
 
+        // Gerakan Mooru
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' && currentPos > 25) {
-                currentPos -= 5;
-            } else if (e.key === 'ArrowRight' && currentPos < 75) {
-                currentPos += 5;
-            }
-            mooru.style.left = currentPos + '%';
+            if (e.key === 'ArrowLeft' && currentPos > 20) currentPos -= 5;
+            if (e.key === 'ArrowRight' && currentPos < 80) currentPos += 5;
+            mooruContainer.style.left = currentPos + '%';
         });
+
+        function nextTutorialStep() {
+            currentStep++;
+            if (currentStep === 2) {
+                sweetsPreview.classList.add('highlight-box');
+                guideText.innerHTML = "<b>Langkah 2:</b> Perhatikan <b>sweets_bar.png</b> di atas! 4 item target akan diacak dari total 6 pilihan makanan. Mooru hanya boleh memakan item yang tampil di bar ini!";
+            } 
+            else if (currentStep === 3) {
+                sweetsPreview.classList.remove('highlight-box');
+                hudPreview.classList.add('highlight-box');
+                guideText.innerHTML = "<b>Langkah 3:</b> Lihat papan skor di pojok kiri atas. Jika <b>Benar</b> mendapat <span style='color:#4ade80'>+5</span> poin. Jika <b>Salah / Makanan Target Lolos</b> akan dikurangi <span style='color:#f87171'>-5</span> poin.";
+            } 
+            else if (currentStep === 4) {
+                hudPreview.classList.remove('highlight-box');
+                guideText.innerHTML = "<b>Langkah 4:</b> Ayo coba simulasi makan! Klik tombol di bawah ini untuk melihat reaksi ekspresi Mooru:";
+                
+                // Tambah tombol simulasi reaksi
+                actionsArea.innerHTML = `
+                    <button class="btn-sim correct" onclick="simulateEat(true)">Coba Makan Benar</button>
+                    <button class="btn-sim wrong" onclick="simulateEat(false)">Coba Makan Salah</button>
+                `;
+                
+                // Munculkan tombol ke game utama
+                document.getElementById('start-game-area').style.display = 'block';
+                document.querySelector('.btn-next-step').style.display = 'none';
+            }
+        }
+
+        function simulateEat(isCorrect) {
+            if (isCorrect) {
+                mooruImg.src = '../image/nyam.png';
+                pointsEffect.innerText = '+5';
+                pointsEffect.className = 'floating-points plus-pop';
+                document.getElementById('trial-score').innerText = '5';
+            } else {
+                mooruImg.src = '../image/ew.png';
+                pointsEffect.innerText = '-5';
+                pointsEffect.className = 'floating-points minus-pop';
+                document.getElementById('trial-score').innerText = '-5';
+            }
+            
+            setTimeout(() => {
+                mooruImg.src = '../image/nyam2.png';
+                pointsEffect.innerText = '';
+                pointsEffect.className = 'floating-points';
+            }, 1000);
+        }
     </script>
 </body>
 </html>

@@ -1,66 +1,84 @@
-/* --- style-trial.css --- */
-.UI-layer {
-    justify-content: space-between;
+.thought-bubble {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
     padding: 20px;
+    background: rgba(255, 255, 255, 0.98);
+    color: #1e293b;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    z-index: 80;
+    text-align: center;
 }
 
-.trial-instruction {
-    background: rgba(255, 255, 255, 0.9);
-    border: 3px solid #4a3f35;
-    padding: 15px;
+.btn-next-step {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #1e293b;
+    color: white;
+    border: none;
     border-radius: 8px;
-    font-size: 10px;
-    color: #333;
-}
-
-.trial-instruction h2 { 
-    margin-bottom: 8px; 
-    font-size: 12px; 
-}
-
-.rules-list { 
-    margin-top: 10px; 
-    list-style: none; 
-}
-
-.rules-list li { 
-    margin: 5px 0; 
-}
-
-.plus { color: green; font-weight: bold; }
-.minus { color: red; font-weight: bold; }
-
-.game-playarea {
-    position: relative;
-    height: 200px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-}
-
-.arrow-indicator {
-    font-size: 30px;
-    color: #4a3f35;
-    padding: 10px;
+    cursor: pointer;
     font-weight: bold;
 }
 
-.mooru-wrapper {
+.tutorial-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn-sim {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-sim.correct { background-color: #22c55e; }
+.btn-sim.wrong { background-color: #ef4444; }
+
+.highlight-box {
+    outline: 4px solid #facc15;
+    box-shadow: 0 0 20px #facc15;
+    transform: scale(1.03) translateX(-50%);
+    transform-origin: left;
+    background: rgba(15, 23, 42, 1) !important;
+}
+
+.start-btn-area {
     position: absolute;
-    bottom: 20px;
+    bottom: 14vh;
     left: 50%;
     transform: translateX(-50%);
-    transition: left 0.1s ease-out;
+    z-index: 100;
 }
 
-.mooru-wrapper img {
-    width: 80px;
-    height: auto;
+/* Animasi Pop Angka Poin */
+.floating-points {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    opacity: 0;
 }
+.plus-pop { color: #22c55e; animation: popUp 1s ease-out; }
+.minus-pop { color: #ef4444; animation: popUp 1s ease-out; }
 
-.action-bar {
-    text-align: center;
-    margin-bottom: 20px;
+@keyframes popUp {
+    0% { opacity: 0; transform: translate(-50%, 0); }
+    30% { opacity: 1; transform: translate(-50%, -20px); }
+    100% { opacity: 0; transform: translate(-50%, -40px); }
 }

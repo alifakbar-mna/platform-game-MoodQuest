@@ -4,211 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Emotion Games - Playing</title>
-    <link rel="stylesheet" href="../css/pageEmote_Happy2-style.css">
+    <link rel="stylesheet" href="style-base.css">
+    <link rel="stylesheet" href="pageEmote_Happy2-style.css">
 </head>
-<body class="bg-pc">
-    <div class="game-container play-screen">
+<body>
+    <div class="game-container" id="arena-container">
         
-        <div class="game-header">
-            <div class="score-board">Score: <span id="score-val">0</span></div>
-            <div class="wave-board">Wave: <span id="wave-val">1/3</span></div>
+        <div class="game-hud">
+            <div class="score-board">SCORE: <span id="score-val">0</span></div>
+            <div class="wave-board">WAVE: <span id="wave-val">1/3</span></div>
         </div>
 
-        <div class="sweets-bar-container">
-            <div class="sweets-bar-bg">
-                <span class="bar-title">Mooru Wants:</span>
-                <div id="target-items-list" class="target-list">
-                    </div>
+        <div class="sweets-bar-wrapper">
+            <div class="sweets-box">
+                <img src="../image/sweets_bar.png" class="bar-decor" alt="Bar">
+                <span class="sweets-title">MOORU WANTS:</span>
+                <div class="target-items-holder" id="target-list"></div>
             </div>
         </div>
 
-        <div class="arena" id="game-arena">
-            <div class="picnic-carpet">
-                <div class="mooru-game-char" id="player-mooru">
-                    <img src="mangap.png" id="mooru-display" alt="Mooru">
-                </div>
-            </div>
+        <div class="character-wrapper" id="game-mooru-container" style="bottom: 5vh;">
+            <div class="floating-points" id="game-pop-points"></div>
+            <img src="../image/nyam2.png" class="character" id="mooru-sprite" alt="Mooru">
         </div>
 
+        <div class="picnic-mat"></div>
     </div>
 
     <script>
-        // Data Master Aset Makanan
         const allItems = [
-            { name: 'Cake', img: 'cake.png' },
-            { name: 'Cookie 1', img: 'cookie1.png' },
-            { name: 'Cookie 2', img: 'cookie2.png' },
-            { name: 'Cupcake', img: 'cupcake.png' },
-            { name: 'Donut', img: 'donut.png' },
-            { name: 'Pudding', img: 'pudding.png' }
+            { name: 'item1', img: '../image/item1.png' },
+            { name: 'item2', img: '../image/item2.png' },
+            { name: 'item3', img: '../image/item3.png' },
+            { name: 'item4', img: '../image/item4.png' },
+            { name: 'item5', img: '../image/item5.png' },
+            { name: 'item6', img: '../image/item6.png' }
         ];
 
-        // Status Game
         let currentWave = 1;
         let score = 0;
         let targetItems = [];
         let gameActive = true;
         let spawnInterval;
-        
-        // Konfigurasi Kesulitan per Wave
+        let mooruX = 50;
+
+        const mooruContainer = document.getElementById('game-mooru-container');
+        const mooruSprite = document.getElementById('mooru-sprite');
+        const arena = document.getElementById('arena-container');
+        const popPoints = document.getElementById('game-pop-points');
+
         const waveConfigs = {
-            1: { targetScore: 25, speed: 3, spawnRate: 2000 },
-            2: { targetScore: 50, speed: 5, spawnRate: 1500 },
-            3: { targetScore: 100, speed: 7, spawnRate: 1000 }
+            1: { targetScore: 25, speed: 4, spawnRate: 1600 },
+            2: { targetScore: 50, speed: 6, spawnRate: 1200 },
+            3: { targetScore: 100, speed: 9, spawnRate: 800 }
         };
 
-        const mooruContainer = document.getElementById('player-mooru');
-        const mooruDisplay = document.getElementById('mooru-display');
-        const arena = document.getElementById('game-arena');
-        let mooruX = 50; // Posisi awal di tengah karpet (%)
-
-        // 1. Pilih 4 item acak dari 6 item yang tersedia
         function generateTargetItems() {
             const shuffled = [...allItems].sort(() => 0.5 - Math.random());
             targetItems = shuffled.slice(0, 4);
             
-            const targetContainer = document.getElementById('target-items-list');
-            targetContainer.innerHTML = '';
+            const listContainer = document.getElementById('target-list');
+            listContainer.innerHTML = '';
             targetItems.forEach(item => {
                 const img = document.createElement('img');
                 img.src = item.img;
-                img.alt = item.name;
-                img.classList.add('target-icon');
-                targetContainer.appendChild(img);
+                img.classList.add('target-item-pic');
+                listContainer.appendChild(img);
             });
         }
 
-        // 2. Kontrol Gerakan Mooru (Keyboard)
         document.addEventListener('keydown', (e) => {
             if (!gameActive) return;
-            // Batasi Mooru hanya bisa bergeser di area karpet (rentang 30% - 70%)
-            if (e.key === 'ArrowLeft' && mooruX > 32) mooruX -= 4;
-            if (e.key === 'ArrowRight' && mooruX < 68) mooruX += 4;
+            if (e.key === 'ArrowLeft' && mooruX > 15) mooruX -= 5;
+            if (e.key === 'ArrowRight' && mooruX < 85) mooruX += 5;
             mooruContainer.style.left = mooruX + '%';
         });
 
-        // 3. Logika Perubahan Ekspresi Wajah Mooru (1 Detik)
-        function changeMooruExpression(type) {
+        function changeExpression(type, pointText) {
+            popPoints.innerText = pointText;
             if (type === 'like') {
-                mooruDisplay.src = 'like.png';
-            } else if (type === 'dislike') {
-                mooruDisplay.src = 'dislike.png';
+                mooruSprite.src = '../image/nyam.png';
+                popPoints.className = 'floating-points plus-pop';
+            } else {
+                mooruSprite.src = '../image/ew.png';
+                popPoints.className = 'floating-points minus-pop';
             }
-            
-            // Kembalikan ke mangap.png setelah 1 detik
+
             setTimeout(() => {
-                if (gameActive) mooruDisplay.src = 'mangap.png';
+                if (gameActive) {
+                    mooruSprite.src = '../image/nyam2.png';
+                    popPoints.innerText = '';
+                    popPoints.className = 'floating-points';
+                }
             }, 1000);
         }
 
-        // 4. Update Skor dan Cek Transisi Wave / Kondisi Gagal
         function updateScore(amount) {
             score += amount;
             document.getElementById('score-val').innerText = score;
 
-            // Jika skor di bawah 0, langsung lempar ke halaman Gagal
             if (score < 0) {
-                gameOver();
+                gameActive = false;
+                clearInterval(spawnInterval);
+                window.location.href = 'pageEmote_Happy3.html';
                 return;
             }
 
-            // Cek apakah target wave terpenuhi
-            let config = waveConfigs[currentWave];
-            if (score >= config.targetScore) {
+            let currentConfig = waveConfigs[currentWave];
+            if (score >= currentConfig.targetScore) {
                 if (currentWave < 3) {
                     currentWave++;
                     document.getElementById('wave-val').innerText = currentWave + '/3';
                     clearInterval(spawnInterval);
-                    startWave(); // Mulai wave berikutnya secara otomatis
+                    startWave();
                 } else {
-                    // Berhasil menyelesaikan Wave 3 (Menang)
-                    alert("Selamat! Kamu memenangkan semua wave!");
+                    gameActive = false;
+                    clearInterval(spawnInterval);
+                    alert("Sempurna! Kamu Berhasil Menyelesaikan Semua Tantangan Wave!");
                     window.location.href = 'homePage.html';
                 }
             }
         }
 
-        function gameOver() {
-            gameActive = false;
-            clearInterval(spawnInterval);
-            window.location.href = 'gameOverPage.html';
-        }
-
-        // 5. Spawn Makanan Jatuh
         function spawnFood() {
             if (!gameActive) return;
-            
-            // Ambil item random dari total 6 jenis makanan untuk dijatuhkan
+
             const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
-            const foodEl = document.createElement('img');
-            foodEl.src = randomItem.img;
-            foodEl.classList.add('falling-food');
+            const foodElement = document.createElement('img');
+            foodElement.src = randomItem.img;
+            foodElement.classList.add('falling-object');
             
-            // Atur posisi X jatuh secara acak di area jalur karpet
-            const minX = 32;
-            const maxX = 68;
-            const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
-            foodEl.style.left = randomX + '%';
-            foodEl.style.top = '0px';
-            arena.appendChild(foodEl);
+            const randomX = Math.floor(Math.random() * (80 - 20 + 1)) + 20;
+            foodElement.style.left = randomX + '%';
+            foodElement.style.top = '0px';
+            arena.appendChild(foodElement);
 
             let currentTop = 0;
-            let speed = waveConfigs[currentWave].speed;
+            let config = waveConfigs[currentWave];
 
             let fallTimer = setInterval(() => {
                 if (!gameActive) {
                     clearInterval(fallTimer);
-                    foodEl.remove();
+                    foodElement.remove();
                     return;
                 }
 
-                currentTop += speed;
-                foodEl.style.top = currentTop + 'px';
+                currentTop += config.speed;
+                foodElement.style.top = currentTop + 'px';
 
-                // Cek Tabrakan dengan Mooru (Mooru berada di bagian bawah arena)
                 let arenaHeight = arena.clientHeight;
-                if (currentTop >= arenaHeight - 90 && currentTop <= arenaHeight - 40) {
-                    let foodXPercent = parseFloat(foodEl.style.left);
-                    // Toleransi kedekatan koordinat X antara Mooru dan Makanan
+                if (currentTop >= arenaHeight - 140 && currentTop <= arenaHeight - 70) {
+                    let foodXPercent = parseFloat(foodElement.style.left);
+                    
                     if (Math.abs(foodXPercent - mooruX) < 8) {
                         clearInterval(fallTimer);
-                        foodEl.remove();
+                        foodElement.remove();
 
-                        // Cek apakah item ini termasuk dalam salah satu dari 4 target
-                        const isTarget = targetItems.some(t => t.name === randomItem.name);
-                        if (isTarget) {
-                            changeMooruExpression('like');
+                        const isMatch = targetItems.some(t => t.name === randomItem.name);
+                        if (isMatch) {
+                            changeExpression('like', '+5');
                             updateScore(5);
                         } else {
-                            changeMooruExpression('dislike');
+                            changeExpression('dislike', '-5');
                             updateScore(-5);
                         }
                     }
                 }
 
-                // Jika makanan lolos ke tanah bawah karpet
                 if (currentTop > arenaHeight) {
                     clearInterval(fallTimer);
-                    foodEl.remove();
-                    
-                    // Jika makanan yang terlewat adalah target yang diminta, kurangi poin
-                    const isTarget = targetItems.some(t => t.name === randomItem.name);
-                    if (isTarget) {
-                        changeMooruExpression('dislike');
+                    foodElement.remove();
+
+                    const isMatch = targetItems.some(t => t.name === randomItem.name);
+                    if (isMatch) {
+                        changeExpression('dislike', '-5');
                         updateScore(-5);
                     }
                 }
             }, 20);
         }
 
-        // 6. Inisialisasi Jalannya Game
         function startWave() {
             generateTargetItems();
             let config = waveConfigs[currentWave];
             spawnInterval = setInterval(spawnFood, config.spawnRate);
         }
 
-        // Jalankan game saat halaman terbuka
         startWave();
     </script>
 </body>

@@ -207,44 +207,65 @@ body {
 /* ==========================================================================
    FITUR PAUSE COMPONENT STYLING 
    ========================================================================== */
+/* Tombol Pause Bentuk Awan */
+.pause-btn {
+    /* UBAH KE ABSOLUTE DAN ATUR KOORDINATNYA */
+    position: absolute !important;
+    top: 20px !important;
+    right: 200px !important; /* Memberi jarak 200px dari kanan agar tidak menabrak scorecard */
+    z-index: 100 !important; /* Memastikan awan berada di lapisan paling atas */
 
-.pause-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(30, 41, 59, 0.75);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 9999;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 65px;
+    height: 45px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    transition: transform 0.2s ease, filter 0.2s ease;
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
 }
 
-.pause-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
+.pause-btn::before,
+.pause-btn::after {
+    content: "";
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
 }
 
-.pause-content {
-    text-align: center;
-    background: rgba(15, 23, 42, 0.9);
-    border: 3px solid white;
-    padding: 30px 40px;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+.pause-btn::before {
+    width: 30px;
+    height: 30px;
+    top: -12px;
+    left: 10px;
 }
 
-.pause-title {
+.pause-btn::after {
+    width: 25px;
+    height: 25px;
+    top: -6px;
+    right: 8px;
+}
+
+.pause-icon {
     font-family: 'Press Start 2P', cursive;
-    font-size: 20px;
-    color: #e2e8f0;
-    margin-bottom: 15px;
+    font-size: 14px;
+    color: #1e293b;
+    /* Naikkan z-index ikon agar tidak tertutup bulatan pseudo-element awan */
+    z-index: 10; 
+    font-weight: bold;
+    letter-spacing: -1px;
 }
 
-.pause-sub {
-    font-size: 14px;
-    color: #94a3b8;
+.pause-btn:hover {
+    /* Gabungkan scale bawaan hover dengan translate jika diperlukan, atau cukup scale saja */
+    transform: scale(1.1);
+    filter: brightness(1.05);
+}
+
+.pause-btn:active {
+    transform: scale(0.95);
 }

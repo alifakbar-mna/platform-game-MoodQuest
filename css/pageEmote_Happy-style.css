@@ -27,13 +27,17 @@ body {
 }
 
 /* HUD & Sweets Bar */
+/* HUD & Sweets Bar */
 .game-hud {
-    position: absolute;
-    /* MEMINDAHKAN ELEMEN KE POJOK KIRI BAWAH */
-    bottom: 20px;
-    left: 20px;
-    top: auto;   /* Meriset posisi top sebelumnya jika ada */
-    right: auto; /* Meriset posisi right sebelumnya jika ada */
+    position: absolute !important;
+    
+    /* PINDAH KE KANAN POJOK ATAS */
+    top: 20px !important;
+    right: 20px !important;
+    
+    /* RESET KOORDINAT BAWAH & KIRI */
+    bottom: auto !important;
+    left: auto !important;
     
     background: rgba(0, 0, 0, 0.6);
     color: #fff;

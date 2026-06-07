@@ -29,9 +29,9 @@
             setTimeout(() => {
                 // Mengganti halaman dalam iframe induk ke halaman berikutnya (homePage.html)
                 if (window.parent && window.parent.document.getElementById('game-viewport')) {
-                    window.parent.document.getElementById('game-viewport').src = 'homePage.html'; // Sesuaikan path jika di dalam folder view
+                    window.parent.document.getElementById('game-viewport').src = '..view/homePage.html'; // Sesuaikan path jika di dalam folder view
                 } else {
-                    window.location.href = 'homePage.html';
+                    window.location.href = '../view/homePage.html';
                 }
             }, 500);
         }

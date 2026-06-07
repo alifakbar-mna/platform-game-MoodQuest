@@ -12,17 +12,22 @@
 </head>
 <body>
 
-    <audio id="global-bgm" src="../audio/music-bg.mp3" loop></audio>
+    <audio id="global-bgm" src="../audio/music-bg.mp3" loop preload="auto"></audio>
 
-    <iframe id="game-viewport" src="../index.html"></iframe>
+    <iframe id="game-viewport" src="../index.html" allow="autoplay"></iframe>
 
     <script>
         const bgm = document.getElementById('global-bgm');
 
-        // Fungsi global untuk memainkan musik (bisa dipanggil dari dalam iframe)
+        // Fungsi global untuk memainkan musik (dipanggil saat tombol play di index.html diklik)
         function playGlobalMusic() {
             if (bgm.paused) {
-                bgm.play().catch(err => console.log("Menunggu interaksi awal untuk audio:", err));
+                // Siasat memaksa load ulang aset jika memori audio sempat ter-suspend oleh browser
+                bgm.load(); 
+                
+                bgm.play()
+                   .then(() => console.log("BGM Berhasil Berputar!"))
+                   .catch(err => console.error("Eror Autoplay Browser:", err));
             }
         }
 

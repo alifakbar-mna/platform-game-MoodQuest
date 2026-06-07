@@ -1,0 +1,244 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    background-color: #0b0914;
+    user-select: none;
+}
+
+/* ==========================================================================
+   GAME CONTAINER & KURSOR RETICLE KUSTOM (`cursor.png`)
+   ========================================================================== */
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../image/angry/bg.png');
+    background-size: cover;
+    background-position: center;
+    
+    /* Mengubah kursor standar laptop/PC menjadi gambar target bidikan */
+    cursor: url('../image/angry/cursor.png') 16 16, crosshair, pointer;
+}
+
+/* Mengunci area pertempuran entitas */
+.battle-arena {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    pointer-events: none; /* Klik tembakan tembus langsung ke kontainer dasar */
+}
+
+.game-entity {
+    position: absolute;
+    transform-origin: center center;
+    pointer-events: none;
+    will-change: transform, left, top, opacity; /* Optimalisasi performa GPU render halus */
+}
+
+/* ==========================================================================
+   HUD & TOMBOL PAUSE AWAN ORIGINAL (KIRI BAWAH & KANAN ATAS)
+   ========================================================================== */
+.game-hud {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    top: auto;
+    right: auto;
+    
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 100;
+}
+
+.pause-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    left: auto;
+    z-index: 200;
+
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    width: 65px;
+    height: 45px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.pause-btn::before,
+.pause-btn::after {
+    content: "";
+    position: absolute;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    z-index: -1 !important; 
+}
+
+.pause-btn::before {
+    width: 30px;
+    height: 30px;
+    top: -12px;
+    left: 10px;
+}
+
+.pause-btn::after {
+    width: 25px;
+    height: 25px;
+    top: -6px;
+    right: 8px;
+}
+
+.pause-icon {
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    font-size: 14px;
+    color: #1e293b;
+    z-index: 10 !important;
+    font-weight: bold;
+    letter-spacing: 0px;
+}
+
+/* ==========================================================================
+   ENTITAS AMUNISI, PROYEKTIL & MASKOT MOORU ANGRY
+   ========================================================================== */
+
+/* Posisi Tempat Maskot Mooru Tampak Belakang */
+.mooru-angry-wrapper {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: auto;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.mooru-asset {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.1s linear;
+}
+
+/* Proyektil Api Meluncur */
+.projectile-fire {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    z-index: 30;
+}
+
+/* Antrean Tampilan Amunisi di Sebelah Kanan Mooru */
+.fire-queue {
+    position: absolute;
+    bottom: 25px;
+    left: calc(50% + 130px); /* Berdiri pas di kanan pundak Mooru */
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 70px;
+    z-index: 45;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.queue-item {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    opacity: 0.4;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+/* Visualisasi pergantian antrean peluru bergeser */
+.active-fire {
+    width: 45px;
+    height: 45px;
+    opacity: 1;
+    transform: scale(1.2) translateY(-5px);
+    filter: drop-shadow(0 0 8px #ff7a00);
+}
+
+.next-fire {
+    width: 32px;
+    height: 32px;
+    opacity: 0.7;
+    transform: scale(1);
+}
+
+.reserve-fire {
+    width: 22px;
+    height: 22px;
+    opacity: 0.3;
+    transform: scale(0.7);
+}
+
+/* Efek Ledakan */
+.explosion-effect {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    z-index: 40;
+}
+
+/* ==========================================================================
+   PAUSE OVERLAY STYLING
+   ========================================================================== */
+.pause-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 9, 20, 0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.pause-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.pause-content {
+    text-align: center;
+    background: rgba(20, 15, 35, 0.95);
+    border: 3px solid #ff4a4a;
+    padding: 30px 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+}
+
+.pause-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    color: #ff4a4a;
+    margin-bottom: 15px;
+}
+
+.pause-sub {
+    font-size: 14px;
+    color: #a5a1b8;
+}

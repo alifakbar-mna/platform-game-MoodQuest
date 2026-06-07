@@ -54,12 +54,12 @@ body {
 
 .pause-btn {
     /* 1. Mengunci Posisi di Layar Game */
-    position: absolute !important;
-    top: 20px !important;
-    right: 200px !important; /* Jarak aman agar tidak menabrak Scorecard di pojok kanan */
-    bottom: auto !important;
-    left: auto !important;
-    z-index: 100 !important; /* Berada di paling depan */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    bottom: auto ;
+    left: auto;
+    z-index: 100; /* Berada di paling depan */
 
     /* 2. Base Desain Awan yang Anda Inginkan */
     background: rgba(255, 255, 255, 0.95);

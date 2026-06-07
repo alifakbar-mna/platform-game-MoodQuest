@@ -24,7 +24,44 @@
     <img src="../image/maskot.png" alt="Mooru Peek" class="mooru-peek">
 
     <script>
+        // --- KONFIGURASI AUDIO GLOBAL AUDIO PERSISTENT ---
+        const audioSrc = "../audio/music-bg.mp3";
+        let bgm = new Audio(audioSrc);
+        bgm.loop = true;
+
+        // 1. Periksa apakah ada catatan detik terakhir dari halaman sebelumnya
+        const savedTime = localStorage.getItem('bgm_current_time');
+        if (savedTime) {
+            bgm.currentTime = parseFloat(savedTime);
+        }
+
+        // 2. Browser melarang autoplay musik sebelum user klik sesuatu.
+        // Jadi, kita jalankan audionya begitu user berinteraksi dengan halaman.
+        function startBGM() {
+            if (bgm.paused) {
+                bgm.play().catch(err => console.log("Menunggu interaksi user untuk audio:", err));
+            }
+        }
+        window.addEventListener('click', startBGM, { once: true });
+        window.addEventListener('touchstart', startBGM, { once: true });
+
+        // 3. Simpan detik audio ke localStorage secara berkala (setiap 200 milidetik)
+        setInterval(() => {
+            if (!bgm.paused) {
+                localStorage.setItem('bgm_current_time', bgm.currentTime);
+            }
+        }, 200);
+
+        // 4. Cadangan darurat: Simpan detik audio tepat sebelum pindah halaman atau refresh
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('bgm_current_time', bgm.currentTime);
+        });
+
+        // --- FUNGSI NAVIGASI PINDAH HALAMAN ---
         function goToIntro() {
+            // Pastikan posisi detik tersimpan dengan pas sebelum navigasi terjadi
+            localStorage.setItem('bgm_current_time', bgm.currentTime);
+
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
             setTimeout(() => {

@@ -4,13 +4,21 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+    position: fixed;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 body {
     font-family: 'Arial', sans-serif;
-    overflow: hidden;
     background-color: #1e1e24;
 }
 
-/* Responsivitas Background Berdasarkan Perangkat */
 .game-container {
     position: relative;
     width: 100vw;
@@ -20,25 +28,14 @@ body {
     background-position: center;
 }
 
-@media (max-width: 768px) {
-    .game-container {
-        background-image: url('../image/hp-bg_Happy.png');
-    }
-}
-
 /* ==========================================================================
-   HUD, PAUSE BUTTON, & SWEETS BAR (DIPERBAIKI)
+   DESAIN ASLI LAPTOP (TIDAK BERUBAH)
    ========================================================================== */
 
-/* Scorecard berada di KANAN POJOK ATAS */
 .game-hud {
     position: absolute;
-    /* MEMINDAHKAN ELEMEN KE POJOK KIRI BAWAH */
     bottom: 20px;
     left: 20px;
-    top: auto;   /* Meriset posisi top sebelumnya jika ada */
-    right: auto; /* Meriset posisi right sebelumnya jika ada */
-    
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 10px 20px;
@@ -48,20 +45,11 @@ body {
     z-index: 10;
 }
 
-/* ==========================================================================
-   PERBAIKAN TOTAL TOMBOL PAUSE AWAN (DESAIN SESUAI ASLI + POSISI KANAN ATAS)
-   ========================================================================== */
-
 .pause-btn {
-    /* 1. Mengunci Posisi di Layar Game */
     position: absolute;
     top: 20px;
     right: 20px;
-    bottom: auto ;
-    left: auto;
-    z-index: 100; /* Berada di paling depan */
-
-    /* 2. Base Desain Awan yang Anda Inginkan */
+    z-index: 100; 
     background: rgba(255, 255, 255, 0.95);
     border: none;
     width: 65px;
@@ -75,53 +63,29 @@ body {
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-/* Bulatan Pembentuk Awan */
-.pause-btn::before,
-.pause-btn::after {
+.pause-btn::before, .pause-btn::after {
     content: "";
     position: absolute;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 50%;
-    /* Memaksa bulatan menempel mengikuti pembentukan badan awan */
     z-index: -1 !important; 
 }
 
-.pause-btn::before {
-    width: 30px;
-    height: 30px;
-    top: -12px;
-    left: 10px;
-}
+.pause-btn::before { width: 30px; height: 30px; top: -12px; left: 10px; }
+.pause-btn::after { width: 25px; height: 25px; top: -6px; right: 8px; }
 
-.pause-btn::after {
-    width: 25px;
-    height: 25px;
-    top: -6px;
-    right: 8px;
-}
-
-/* Ikon Garis Dua Jeda */
 .pause-icon {
     font-family: 'Press Start 2P', cursive;
     font-size: 14px;
     color: #1e293b;
-    z-index: 10 !important; /* Dipaksa naik ke layer paling atas agar tidak tertutup bulatan awan */
+    z-index: 10 !important;
     font-weight: bold;
     letter-spacing: -1px;
 }
 
-/* Efek Animasi Tombol */
-.pause-btn:hover {
-    transform: scale(1.1);
-    filter: brightness(1.05);
-}
+.pause-btn:hover { transform: scale(1.1); filter: brightness(1.05); }
+.pause-btn:active { transform: scale(0.95); }
 
-.pause-btn:active {
-    transform: scale(0.95);
-}
-
-
-/* Papan Kayu Sweets Bar (Kiri Atas) */
 .sweets-bar-wrapper {
     position: absolute;
     top: -15px;
@@ -163,11 +127,6 @@ body {
     object-fit: contain;
 }
 
-/* ==========================================================================
-   INTERFACE & GAMEPLAY COMPONENTS
-   ========================================================================== */
-
-/* Kotak Instruksi / Thought Bubble */
 .instruction-box {
     position: absolute;
     top: 130px;
@@ -184,16 +143,8 @@ body {
     z-index: 20;
 }
 
-.instruction-box h2 {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-.instruction-box p {
-    font-size: 14px;
-    color: #555;
-}
+.instruction-box h2 { font-size: 18px; color: #333; margin-bottom: 5px; }
+.instruction-box p { font-size: 14px; color: #555; }
 
 .btn-next {
     margin-top: 10px;
@@ -205,7 +156,6 @@ body {
     font-weight: bold;
 }
 
-/* Karakter Mooru */
 .character-wrapper {
     position: absolute;
     bottom: 8vh;
@@ -217,13 +167,8 @@ body {
     transition: left 0.1s ease-out;
 }
 
-.character {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+.character { width: 100%; height: 100%; object-fit: contain; }
 
-/* Simulasi Makanan */
 #trial-arena {
     position: absolute;
     width: 100%;
@@ -240,7 +185,6 @@ body {
     object-fit: contain;
 }
 
-/* Efek Floating Text */
 .score-float {
     position: absolute;
     bottom: 22vh;
@@ -253,12 +197,8 @@ body {
     z-index: 15;
 }
 
-.score-float.show-float {
-    opacity: 1;
-    transform: translate(-50%, -30px);
-}
+.score-float.show-float { opacity: 1; transform: translate(-50%, -30px); }
 
-/* Navigasi Utama */
 .nav-container {
     position: absolute;
     bottom: 2vh;
@@ -278,9 +218,6 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* ==========================================================================
-   FITUR PAUSE OVERLAY STYLING 
-   ========================================================================== */
 .pause-overlay {
     position: fixed;
     inset: 0;
@@ -296,10 +233,7 @@ body {
     transition: opacity 0.3s ease;
 }
 
-.pause-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+.pause-overlay.active { opacity: 1; pointer-events: auto; }
 
 .pause-content {
     text-align: center;
@@ -310,14 +244,96 @@ body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.pause-title {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 20px;
-    color: #e2e8f0;
-    margin-bottom: 15px;
-}
+.pause-title { font-family: 'Press Start 2P', cursive; font-size: 20px; color: #e2e8f0; margin-bottom: 15px; }
+.pause-sub { font-size: 14px; color: #94a3b8; }
 
-.pause-sub {
-    font-size: 14px;
-    color: #94a3b8;
+
+/* ==========================================================================
+   MEDIA QUERY: PERBAIKAN KHUSUS UNTUK VERSI HAPE (DIPERBAIKI TOTAL)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .game-container {
+        background-image: url('../image/hp-bg_Happy.png');
+    }
+
+    /* Memperkecil Papan Sweets Kayu agar Tidak Menimpa Tombol Pause */
+    .sweets-bar-wrapper {
+        width: 180px;
+        height: 90px;
+        top: 5px;
+        left: 10px;
+    }
+
+    .target-items-holder {
+        gap: 15px;
+        left: 14%;
+        width: 75%;
+    }
+
+    .target-item-pic {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Papan Dialog Instruksi Diturunkan Agar Tidak Tertutup Sweets Bar */
+    .instruction-box {
+        top: 105px;
+        padding: 10px 15px;
+        width: 92%;
+    }
+
+    .instruction-box h2 {
+        font-size: 14px;
+    }
+
+    .instruction-box p {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+
+    /* Mengecilkan Tombol Pause Awan di HP */
+    .pause-btn {
+        width: 46px;
+        height: 32px;
+        top: 15px;
+        right: 15px;
+    }
+    .pause-btn::before { width: 22px; height: 22px; top: -9px; left: 6px; }
+    .pause-btn::after { width: 18px; height: 18px; top: -5px; right: 5px; }
+    .pause-icon { font-size: 10px; }
+
+    /* HUD Score Diperkecil Supaya Muat Bersanding dengan Navigasi Utama */
+    .game-hud {
+        bottom: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.75);
+    }
+
+    /* Tombol Utama Mulai Game */
+    .btn-main {
+        padding: 8px 18px;
+        font-size: 11px;
+    }
+    .nav-container {
+        bottom: 15px;
+    }
+
+    /* Skala Karakter Mooru Disesuaikan untuk Layar HP */
+    .character-wrapper {
+        width: 75px;
+        height: 75px;
+        bottom: 8.5vh;
+    }
+
+    .falling-food {
+        width: 22px;
+        height: 22px;
+    }
+
+    .score-float {
+        font-size: 20px;
+        bottom: 20vh;
+    }
 }

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Emotion Games - Trial Mode</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/pageEmote_Happy-style.css">
@@ -34,13 +34,14 @@
 
         <div class="instruction-box">
             <h2 id="instruction-title">Langkah 1: Gerakan Mooru</h2>
-            <p id="instruction-text">Gunakan tombol PANAH KANAN / KIRI pada keyboard untuk menggeser Mooru (nyam2.png) mendekati makanan!</p>
+            <p id="instruction-text">Gunakan PANAH KEYBOARD atau SENTUH & SERET Mooru untuk mendekati makanan!</p>
             <button id="next-step-btn" class="btn-next" style="display: none;">Lanjut</button>
         </div>
 
         <div id="score-float" class="score-float"></div>
 
-        <div class="character-wrapper" id="trial-mooru-container">
+        <!-- Touch-action ditambahkan untuk mematikan scroll browser bawaan saat drag karakter -->
+        <div class="character-wrapper" id="trial-mooru-container" style="touch-action: none;">
             <img src="../image/happyWin.png" class="character" id="trial-mooru" alt="Mooru">
         </div>
 
@@ -68,9 +69,14 @@
         let currentStep = 1;
         let hasMoved = false;
         let trialFoodTimer;
-        let isPaused = false; // State Pause
+        let isPaused = false; 
 
-        // Inisialisasi 4 item acak untuk bar tutorial
+        // State untuk kontrol drag di HP
+        let isDragging = false;
+        let startTouchX = 0;
+        let startContainerLeft = 0;
+
+        // Inisialisasi item acak
         const allItems = ['../image/item1.png', '../image/item2.png', '../image/item3.png', '../image/item4.png', '../image/item5.png', '../image/item6.png'];
         const trialTargets = [...allItems].sort(() => 0.5 - Math.random()).slice(0, 4);
         
@@ -81,16 +87,16 @@
             targetList.appendChild(img);
         });
 
-        // Kontrol Gerakan Langkah 1 & Langkah 4
+        // --- SISTEM KONTROL KEYBOARD (LAPTOP) ---
         document.addEventListener('keydown', (e) => {
-            if (isPaused) return; // Mencegah gerak saat pause aktif
+            if (isPaused) return; 
 
             if (currentStep === 1 || currentStep === 4) {
-                if (e.key === 'ArrowLeft' && currentPos > 20) {
-                    currentPos -= 5;
+                if (e.key === 'ArrowLeft' && currentPos > 10) {
+                    currentPos -= 4;
                     hasMoved = true;
-                } else if (e.key === 'ArrowRight' && currentPos < 80) {
-                    currentPos += 5;
+                } else if (e.key === 'ArrowRight' && currentPos < 90) {
+                    currentPos += 4;
                     hasMoved = true;
                 }
                 mooruContainer.style.left = currentPos + '%';
@@ -101,6 +107,47 @@
             }
         });
 
+        // --- SISTEM KONTROL SENTUH / DRAG SWIPE (HP) ---
+        mooruContainer.addEventListener('touchstart', (e) => {
+            if (isPaused || (currentStep !== 1 && currentStep !== 4)) return;
+            isDragging = true;
+            startTouchX = e.touches[0].clientX;
+            
+            // Mengambil posisi persentase awal kontainer saat ini
+            const arenaWidth = window.innerWidth;
+            const currentLeftPx = mooruContainer.getBoundingClientRect().left + (mooruContainer.offsetWidth / 2);
+            startContainerLeft = (currentLeftPx / arenaWidth) * 100;
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging || isPaused) return;
+
+            const currentTouchX = e.touches[0].clientX;
+            const deltaX = currentTouchX - startTouchX;
+            const arenaWidth = window.innerWidth;
+
+            // Konversi pergeseran pixel ke satuan persen (%)
+            const deltaPercent = (deltaX / arenaWidth) * 100;
+            let newPos = startContainerLeft + deltaPercent;
+
+            // Batasan pergerakan layar (Min 12%, Max 88%)
+            if (newPos < 12) newPos = 12;
+            if (newPos > 88) newPos = 88;
+
+            currentPos = newPos;
+            mooruContainer.style.left = currentPos + '%';
+            hasMoved = true;
+
+            if (currentStep === 1 && hasMoved) {
+                nextBtn.style.display = 'inline-block';
+            }
+        });
+
+        window.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // --- TIMELINE TUTORIAL SYSTEM ---
         nextBtn.addEventListener('click', () => {
             if (isPaused) return;
             currentStep++;
@@ -124,7 +171,7 @@
 
         function startTrialSpawning() {
             trialFoodTimer = setInterval(() => {
-                if (isPaused) return; // Mencegah pembuatan makanan baru saat dijeda
+                if (isPaused) return; 
 
                 const isTarget = Math.random() > 0.5;
                 const foodSrc = isTarget ? trialTargets[0] : allItems.find(x => !trialTargets.includes(x));
@@ -132,21 +179,21 @@
                 const food = document.createElement('img');
                 food.src = foodSrc;
                 food.classList.add('falling-food');
-                food.style.left = (Math.random() * (75 - 25) + 25) + '%';
+                food.style.left = (Math.random() * (80 - 20) + 20) + '%';
                 food.style.top = '0px';
                 trialArena.appendChild(food);
 
                 let topPos = 0;
                 let fall = setInterval(() => {
-                    if (isPaused) return; // Menghentikan pergerakan jatuh saat dijeda
+                    if (isPaused) return; 
 
                     topPos += 4;
                     food.style.top = topPos + 'px';
 
                     let arenaH = trialArena.clientHeight || 400;
-                    if (topPos >= arenaH - 120 && topPos <= arenaH - 60) {
+                    if (topPos >= arenaH - 140 && topPos <= arenaH - 50) {
                         let foodX = parseFloat(food.style.left);
-                        if (Math.abs(foodX - currentPos) < 8) {
+                        if (Math.abs(foodX - currentPos) < 10) {
                             clearInterval(fall);
                             food.remove();
                             
@@ -182,7 +229,6 @@
             setTimeout(() => scoreFloat.classList.remove('show-float'), 800);
         }
 
-        // Fungsi Fitur Jeda (Pause)
         function togglePause() {
             isPaused = !isPaused;
             if (isPaused) {

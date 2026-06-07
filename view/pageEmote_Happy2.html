@@ -8,8 +8,21 @@
     <link rel="stylesheet" href="../css/pageEmote_Happy2-style.css">
 </head>
 <body>
+    <!-- Fitur Pause Overlay -->
+    <div id="pauseOverlay" class="pause-overlay" onclick="togglePause()">
+        <div class="pause-content">
+            <p class="pause-title">GAME PAUSED</p>
+            <p class="pause-sub">Klik di mana saja untuk melanjutkan</p>
+        </div>
+    </div>
+    
     <div class="game-container" id="arena-container">
+        <!-- Tombol Pause Bentuk Awan di Pojok Kanan Atas -->
+        <button class="pause-btn" onclick="event.stopPropagation(); togglePause();" title="Pause">
+            <span class="pause-icon">||</span>
+        </button>
         
+        <!-- Scorecard di Pojok Kiri Bawah -->
         <div class="game-hud">
             <div>SCORE: <span id="score-val">0</span></div>
             <div>WAVE: <span id="wave-val">1/3</span></div>
@@ -42,6 +55,7 @@
         let score = 0;
         let targetItems = [];
         let gameActive = true;
+        let isPaused = false; // State status jeda game
         let spawnInterval;
         let mooruX = 50; 
 
@@ -49,6 +63,7 @@
         const mooruSprite = document.getElementById('mooru-sprite');
         const arena = document.getElementById('arena-container');
         const floatText = document.getElementById('game-score-float');
+        const pauseOverlay = document.getElementById('pauseOverlay');
 
         const waveConfigs = {
             1: { targetScore: 25, speed: 5, spawnRate: 1800 },
@@ -70,8 +85,9 @@
             });
         }
 
+        // Pergerakan Karakter (Hanya aktif jika game jalan & tidak di-pause)
         document.addEventListener('keydown', (e) => {
-            if (!gameActive) return;
+            if (!gameActive || isPaused) return;
             if (e.key === 'ArrowLeft' && mooruX > 15) mooruX -= 5;
             if (e.key === 'ArrowRight' && mooruX < 85) mooruX += 5;
             mooruContainer.style.left = mooruX + '%';
@@ -131,7 +147,7 @@
         }
 
         function spawnFood() {
-            if (!gameActive) return;
+            if (!gameActive || isPaused) return; // Mencegah pembuatan makanan baru saat di-pause
 
             const randomItem = allItems[Math.floor(Math.random() * allItems.length)];
             const foodElement = document.createElement('img');
@@ -152,6 +168,9 @@
                     foodElement.remove();
                     return;
                 }
+
+                // Mencegah pergerakan jatuh ke bawah saat game di-pause
+                if (isPaused) return;
 
                 currentTop += config.speed;
                 foodElement.style.top = currentTop + 'px';
@@ -186,6 +205,17 @@
                     }
                 }
             }, 20);
+        }
+
+        // Fungsi Aktivasi & Penonaktifan Jeda (Pause)
+        function togglePause() {
+            if (!gameActive) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                pauseOverlay.classList.add('active');
+            } else {
+                pauseOverlay.classList.remove('active');
+            }
         }
 
         function startWave() {

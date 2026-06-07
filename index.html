@@ -37,8 +37,7 @@
             bgm.currentTime = parseFloat(savedTime);
         }
 
-        // 2. Fungsi pemicu utama untuk memulai audio saat interaksi bebas di layar
-         Lah langkah antisipasi browser autoplay policy
+        // 2. Fungsi pemicu utama untuk memulai audio saat interaksi bebas di layar Lah langkah antisipasi browser autoplay policy
         function startBGM() {
             if (bgm.paused) {
                 bgm.play().catch(err => console.log("Menunggu klik pengguna untuk memutar suara:", err));

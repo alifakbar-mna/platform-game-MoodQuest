@@ -48,15 +48,20 @@ body {
     z-index: 10;
 }
 
-/* Tombol Pause Awan berada di KANAN ATAS (Sebelah Kiri Scorecard) */
-.pause-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px; /* Memberi jarak agar tidak menabrak kotak score */
-    bottom: auto;
-    left: auto;
-    z-index: 100;
+/* ==========================================================================
+   PERBAIKAN TOTAL TOMBOL PAUSE AWAN (DESAIN SESUAI ASLI + POSISI KANAN ATAS)
+   ========================================================================== */
 
+.pause-btn {
+    /* 1. Mengunci Posisi di Layar Game */
+    position: absolute !important;
+    top: 20px !important;
+    right: 200px !important; /* Jarak aman agar tidak menabrak Scorecard di pojok kanan */
+    bottom: auto !important;
+    left: auto !important;
+    z-index: 100 !important; /* Berada di paling depan */
+
+    /* 2. Base Desain Awan yang Anda Inginkan */
     background: rgba(255, 255, 255, 0.95);
     border: none;
     width: 65px;
@@ -70,37 +75,42 @@ body {
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.pause-btn::before, 
+/* Bulatan Pembentuk Awan */
+.pause-btn::before,
 .pause-btn::after {
     content: "";
     position: absolute;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 50%;
+    /* Memaksa bulatan menempel mengikuti pembentukan badan awan */
+    z-index: -1 !important; 
 }
 
-.pause-btn::before { 
-    width: 30px; 
-    height: 30px; 
-    top: -12px; 
-    left: 10px; 
+.pause-btn::before {
+    width: 30px;
+    height: 30px;
+    top: -12px;
+    left: 10px;
 }
 
-.pause-btn::after { 
-    width: 25px; 
-    height: 25px; 
-    top: -6px; 
-    right: 8px; 
+.pause-btn::after {
+    width: 25px;
+    height: 25px;
+    top: -6px;
+    right: 8px;
 }
 
+/* Ikon Garis Dua Jeda */
 .pause-icon {
     font-family: 'Press Start 2P', cursive;
     font-size: 14px;
     color: #1e293b;
-    z-index: 2;
+    z-index: 10 !important; /* Dipaksa naik ke layer paling atas agar tidak tertutup bulatan awan */
     font-weight: bold;
     letter-spacing: -1px;
 }
 
+/* Efek Animasi Tombol */
 .pause-btn:hover {
     transform: scale(1.1);
     filter: brightness(1.05);
@@ -109,6 +119,7 @@ body {
 .pause-btn:active {
     transform: scale(0.95);
 }
+
 
 /* Papan Kayu Sweets Bar (Kiri Atas) */
 .sweets-bar-wrapper {

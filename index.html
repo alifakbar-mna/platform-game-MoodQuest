@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoodQuest - Welcome</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="../css/index-style.css">
 </head>
 <body>
@@ -24,62 +22,22 @@
     <img src="../image/maskot.png" alt="Mooru Peek" class="mooru-peek">
 
     <script>
-        // --- KONFIGURASI AUDIO GLOBAL AUDIO PERSISTENT ---
-        // PENTING: Jika index.html berada di folder paling luar (sejajar folder audio),
-        // ubah path di bawah ini menjadi "audio/music-bg.mp3" (tanpa tanda ../)
-        const audioSrc = "../audio/music-bg.mp3";
-        let bgm = new Audio(audioSrc);
-        bgm.loop = true;
-
-        // 1. Ambil data detik terakhir jika ada pemutaran sebelumnya
-        const savedTime = localStorage.getItem('bgm_current_time');
-        if (savedTime) {
-            bgm.currentTime = parseFloat(savedTime);
-        }
-
-        // 2. Fungsi pemicu utama untuk memulai audio saat interaksi bebas di layar Lah langkah antisipasi browser autoplay policy
-        function startBGM() {
-            if (bgm.paused) {
-                bgm.play().catch(err => console.log("Menunggu klik pengguna untuk memutar suara:", err));
-            }
-        }
-        window.addEventListener('click', startBGM, { once: true });
-        window.addEventListener('touchstart', startBGM, { once: true });
-
-        // 3. Simpan posisi detik lagu ke localStorage secara berkala setiap 200 milidetik
-        setInterval(() => {
-            if (!bgm.paused) {
-                localStorage.setItem('bgm_current_time', bgm.currentTime);
-            }
-        }, 200);
-
-        // 4. Cadangan darurat jika halaman di-refresh secara paksa
-        window.addEventListener('beforeunload', () => {
-            localStorage.setItem('bgm_current_time', bgm.currentTime);
-        });
-
-        // --- FUNGSI NAVIGASI PINDAH HALAMAN (PERBAIKAN TOTAL AUDIO) ---
         function goToIntro() {
-            // Memaksa audio berputar atau memastikan statusnya aktif lewat klik tombol ini
-            if (bgm.paused) {
-                bgm.play().then(() => {
-                    localStorage.setItem('bgm_current_time', bgm.currentTime);
-                    eksekusiPindahHalaman();
-                }).catch(err => {
-                    console.log("Audio diblokir oleh sistem browser:", err);
-                    eksekusiPindahHalaman(); // Tetap pindah jika ada kegagalan media perangkat
-                });
-            } else {
-                localStorage.setItem('bgm_current_time', bgm.currentTime);
-                eksekusiPindahHalaman();
+            // Memanggil fungsi play di file induk (main.html) lewat gerbang window.parent
+            if (window.parent && window.parent.playGlobalMusic) {
+                window.parent.playGlobalMusic();
             }
-        }
 
-        function eksekusiPindahHalaman() {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
+            
             setTimeout(() => {
-                window.location.href = '../view/introductionPage.html';
+                // Alih-alih window.location.href biasa, kita ubah isi src dari iframe induknya
+                if (window.parent && window.parent.document.getElementById('game-viewport')) {
+                    window.parent.document.getElementById('game-viewport').src = 'view/introductionPage.html';
+                } else {
+                    window.location.href = 'view/introductionPage.html';
+                }
             }, 500);
         }
     </script>

@@ -1,14 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+    position: fixed;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 body {
     font-family: 'Arial', sans-serif;
-    overflow: hidden;
     background-color: #1e1e24;
 }
 
@@ -22,24 +29,16 @@ body {
     background-position: center;
 }
 
-@media (max-width: 768px) {
-    .game-container {
-        background-image: url('../image/hp-bg_Happy.png');
-    }
-}
-
 /* ==========================================================================
-   HUD, PAUSE BUTTON, & SWEETS BAR
+   DESAIN ASLI LAPTOP (TIDAK BERUBAH)
    ========================================================================== */
 
-/* Scorecard berada tetap di KIRI POJOK BAWAH */
 .game-hud {
     position: absolute;
     bottom: 20px;
     left: 20px;
     top: auto;
     right: auto;
-    
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 10px 20px;
@@ -49,15 +48,13 @@ body {
     z-index: 10;
 }
 
-/* Tombol Pause Bentuk Awan Sempurna di KANAN POJOK ATAS */
 .pause-btn {
     position: absolute;
     top: 20px;
     right: 20px;
     bottom: auto;
     left: auto;
-    z-index: 100; /* Lapisan paling depan */
-
+    z-index: 100; 
     background: rgba(255, 255, 255, 0.95);
     border: none;
     width: 65px;
@@ -71,50 +68,30 @@ body {
     transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-/* Gumpalan Bulatan Awan */
 .pause-btn::before,
 .pause-btn::after {
     content: "";
     position: absolute;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 50%;
-    z-index: -1 !important; /* Tersembunyi di belakang teks agar awan menyatu rapi */
+    z-index: -1 !important; 
 }
 
-.pause-btn::before {
-    width: 30px;
-    height: 30px;
-    top: -12px;
-    left: 10px;
-}
+.pause-btn::before { width: 30px; height: 30px; top: -12px; left: 10px; }
+.pause-btn::after { width: 25px; height: 25px; top: -6px; right: 8px; }
 
-.pause-btn::after {
-    width: 25px;
-    height: 25px;
-    top: -6px;
-    right: 8px;
-}
-
-/* Simbol Garis Dua Jeda (Pixel Art) */
 .pause-icon {
     font-family: 'Press Start 2P', monospace, sans-serif;
     font-size: 14px;
     color: #1e293b;
-    z-index: 10 !important; /* Dipaksa ke depan agar terlihat jelas */
+    z-index: 10 !important;
     font-weight: bold;
     letter-spacing: 0px;
 }
 
-.pause-btn:hover {
-    transform: scale(1.1);
-    filter: brightness(1.05);
-}
+.pause-btn:hover { transform: scale(1.1); filter: brightness(1.05); }
+.pause-btn:active { transform: scale(0.95); }
 
-.pause-btn:active {
-    transform: scale(0.95);
-}
-
-/* Papan Kayu Target Makanan (Kiri Pojok Atas) */
 .sweets-bar-wrapper {
     position: absolute;
     top: -15px;
@@ -124,11 +101,7 @@ body {
     z-index: 10;
 }
 
-.sweets-bar-bg {
-    width: 100%;
-    height: 100%;
-    object-fit: fill; 
-}
+.sweets-bar-bg { width: 100%; height: 100%; object-fit: fill; }
 
 .target-items-holder {
     position: absolute;
@@ -142,17 +115,8 @@ body {
     gap: 40px; 
 }
 
-.target-item-pic {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-}
+.target-item-pic { width: 30px; height: 30px; object-fit: contain; }
 
-/* ==========================================================================
-   GAMEPLAY & ENTITY COMPONENTS
-   ========================================================================== */
-
-/* Wadah Karakter Mooru */
 .character-wrapper {
     position: absolute;
     bottom: 8vh;
@@ -164,13 +128,8 @@ body {
     transition: left 0.1s ease-out;
 }
 
-.character {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+.character { width: 100%; height: 100%; object-fit: contain; }
 
-/* Element Makanan Jatuh */
 .falling-object {
     position: absolute;
     width: 30px;
@@ -179,7 +138,6 @@ body {
     z-index: 4;
 }
 
-/* Angka Skor Melayang (+5 / -5) */
 .score-float {
     position: absolute;
     bottom: 22vh;
@@ -191,21 +149,15 @@ body {
     transform: translateX(-50%);
 }
 
-.score-float.show-float {
-    opacity: 1;
-    transform: translate(-50%, -30px);
-}
+.score-float.show-float { opacity: 1; transform: translate(-50%, -30px); }
 
-/* ==========================================================================
-   FITUR PAUSE OVERLAY STYLING 
-   ========================================================================== */
 .pause-overlay {
     position: fixed;
     inset: 0;
     background: rgba(30, 41, 59, 0.75);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    z-index: 9999; /* Di atas seluruh elemen game */
+    z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,10 +166,7 @@ body {
     transition: opacity 0.3s ease;
 }
 
-.pause-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+.pause-overlay.active { opacity: 1; pointer-events: auto; }
 
 .pause-content {
     text-align: center;
@@ -228,14 +177,71 @@ body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
-.pause-title {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 20px;
-    color: #e2e8f0;
-    margin-bottom: 15px;
-}
+.pause-title { font-family: 'Press Start 2P', cursive; font-size: 20px; color: #e2e8f0; margin-bottom: 15px; }
+.pause-sub { font-size: 14px; color: #94a3b8; }
 
-.pause-sub {
-    font-size: 14px;
-    color: #94a3b8;
+/* ==========================================================================
+   MEDIA QUERY: PENYESUAIAN TATA LETAK KHUSUS SMARTPHONE
+   ========================================================================== */
+@media (max-width: 768px) {
+    .game-container {
+        background-image: url('../image/hp-bg_Happy.png');
+    }
+
+    /* Mengurangi ukuran papan kayu sweets bar agar seimbang */
+    .sweets-bar-wrapper {
+        width: 180px;
+        height: 90px;
+        top: 5px;
+        left: 10px;
+    }
+
+    .target-items-holder {
+        gap: 15px;
+        left: 14%;
+        width: 75%;
+    }
+
+    .target-item-pic {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Menyesuaikan tombol cloud pause agar tidak menumpuk */
+    .pause-btn {
+        width: 46px;
+        height: 32px;
+        top: 15px;
+        right: 15px;
+    }
+    .pause-btn::before { width: 22px; height: 22px; top: -9px; left: 6px; }
+    .pause-btn::after { width: 18px; height: 18px; top: -5px; right: 5px; }
+    .pause-icon { font-size: 10px; }
+
+    /* Ukuran teks skor melayang disesuaikan */
+    .score-float {
+        font-size: 20px;
+        bottom: 20vh;
+    }
+
+    /* Mengecilkan scorecard HUD di pojok bawah layar */
+    .game-hud {
+        bottom: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 12px;
+        background: rgba(0, 0, 0, 0.75);
+    }
+
+    /* Ukuran Mooru & makanan jatuh disesuaikan dengan viewport HP */
+    .character-wrapper {
+        width: 75px;
+        height: 75px;
+        bottom: 8.5vh;
+    }
+
+    .falling-object {
+        width: 22px;
+        height: 22px;
+    }
 }

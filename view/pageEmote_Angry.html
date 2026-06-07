@@ -10,25 +10,71 @@
         /* CSS Tambahan Langsung untuk Kursor Virtual yang Mengikuti Mouse/Jari */
         .custom-cursor-follower {
             position: fixed;
-            width: 80px;  /* Ukuran kursor bisa Anda atur sesuka hati di sini */
+            width: 80px;  
             height: 80px;
             background-image: url('../image/angry/cursor.png');
             background-size: contain;
             background-repeat: no-repeat;
-            pointer-events: none; /* Supaya klik tidak terhalang oleh gambar kursor ini */
-            z-index: 99999; /* Berada di paling depan layar */
-            transform: translate(-50%, -50%); /* Pas di tengah titik klik */
-            display: none; /* Muncul hanya saat mendeteksi gerakan */
+            pointer-events: none; 
+            z-index: 99999; 
+            transform: translate(-50%, -50%); 
+            display: none; 
         }
         
         /* Sembunyikan kursor asli jika kursor virtual aktif */
         .game-container {
             cursor: none !important;
         }
+
+        /* INDIKATOR VISUAL KEMENANGAN BARU */
+        .win-announcement {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99995;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .win-announcement.show-win {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .win-text-main {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 36px;
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+            margin-bottom: 20px;
+            animation: pulseText 1s infinite alternate;
+        }
+
+        .win-text-sub {
+            font-size: 16px;
+            color: #e2e8f0;
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulseText {
+            from { transform: scale(0.95); filter: brightness(0.9); }
+            to { transform: scale(1.05); filter: brightness(1.2); }
+        }
     </style>
 </head>
 <body>
     <div id="custom-cursor" class="custom-cursor-follower"></div>
+
+    <div id="winOverlay" class="win-announcement">
+        <p class="win-text-main">YOU WIN!</p>
+        <p class="win-text-sub">Membuka halaman penghargaan...</p>
+    </div>
 
     <div id="pauseOverlay" class="pause-overlay" onclick="togglePause()">
         <div class="pause-content">
@@ -66,6 +112,7 @@
         const mooru = document.getElementById('mooru-container');
         const mooruAsset = document.getElementById('mooru-asset');
         const pauseOverlay = document.getElementById('pauseOverlay');
+        const winOverlay = document.getElementById('winOverlay');
         const queueContainer = document.getElementById('fire-queue-container');
         const customCursor = document.getElementById('custom-cursor');
 
@@ -89,19 +136,20 @@
         const explosionImages = ['../image/angry/explosion1.gif', '../image/angry/explosion2.gif'];
         const fireImages = { 1: '../image/angry/fire1.gif', 2: '../image/angry/fire2.gif', 3: '../image/angry/fire3.gif' };
 
-        // --- SISTEM PELACAKAN KURSOR UNTUK LAPTOP & HP (SMOOTH KURSOR KUSTOM) ---
+        // --- SISTEM PELACAKAN KURSOR ---
         function moveCursor(e) {
+            if (!gameActive) {
+                customCursor.style.display = 'none';
+                return;
+            }
             customCursor.style.display = 'block';
-            // Deteksi jika menggunakan Touchscreen HP atau Mouse Laptop
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            // Pergerakan mulus posisi kursor virtual
             customCursor.style.left = `${clientX}px`;
             customCursor.style.top = `${clientY}px`;
         }
 
-        // Event listener pendeteksi pergerakan mouse (Laptop) & sentuhan (HP)
         window.addEventListener('mousemove', moveCursor);
         window.addEventListener('touchmove', moveCursor);
         window.addEventListener('touchstart', moveCursor);
@@ -136,7 +184,6 @@
             });
         }
 
-        // --- LOGIKA TEMBAK BISA MENGGUNAKAN KLIK / SENTUHAN HP ---
         function handleShoot(clientX, clientY) {
             if (!gameActive || isPaused) return;
 
@@ -166,7 +213,7 @@
         }
 
         container.addEventListener('click', (e) => {
-            if (e.target.closest('.pause-btn')) return; 
+            if (e.target.closest('.pause-btn') || e.target.closest('.pause-overlay')) return; 
             handleShoot(e.clientX, e.clientY);
         });
 
@@ -238,18 +285,35 @@
             setTimeout(() => { exp.remove(); }, 600); 
         }
 
+        // --- SISTEM PEMBARUAN SKOR & LOGIKA KEMENANGAN (PERBAIKAN TOTAL) ---
         function updateScore(amount) {
             score += amount; if (score < 0) score = 0;
             document.getElementById('score-val').innerText = score;
             const config = waveConfigs[currentWave];
+            
             if (score >= config.targetScore) {
                 if (currentWave < 3) {
                     currentWave++;
                     document.getElementById('wave-val').innerText = currentWave + '/3';
                     demons.forEach(d => d.element.remove()); demons = [];
                 } else {
+                    // JIKA SELESAI WAVE 3 (MENANG MUTLAK)
                     gameActive = false;
-                    window.location.href = '../view/pageEmote_Angry3.html';
+                    
+                    // Bersihkan sisa objek bertarung di layar
+                    demons.forEach(d => d.element.remove());
+                    projectiles.forEach(p => p.element.remove());
+                    demons = []; projectiles = [];
+
+                    // Sembunyikan kursor kustom agar tidak berantakan di layar kemenangan
+                    customCursor.style.display = 'none';
+
+                    // Memunculkan Indikator Animasi Menang ("YOU WIN") selama 2 detik sebelum pindah page
+                    winOverlay.classList.add('show-win');
+
+                    setTimeout(() => {
+                        window.location.href = '../view/pageEmote_Angry3.html';
+                    }, 2000);
                 }
             }
         }

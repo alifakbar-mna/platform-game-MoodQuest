@@ -36,9 +36,9 @@
 
                 // FIX: path iframe (audio tetap jalan karena tidak reload script parent)
                 if (window.parent && window.parent.document.getElementById('game-viewport')) {
-                    window.parent.document.getElementById('game-viewport').src = './view/introductionPage.html';
+                    window.parent.document.getElementById('game-viewport').src = '../view/introductionPage.html';
                 } else {
-                    window.location.href = './view/introductionPage.html';
+                    window.location.href = '../view/introductionPage.html';
                 }
 
             }, 500);

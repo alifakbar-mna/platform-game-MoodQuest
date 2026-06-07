@@ -34,9 +34,9 @@
             setTimeout(() => {
                 // Alih-alih window.location.href biasa, kita ubah isi src dari iframe induknya
                 if (window.parent && window.parent.document.getElementById('game-viewport')) {
-                    window.parent.document.getElementById('game-viewport').src = 'view/introductionPage.html';
+                    window.parent.document.getElementById('game-viewport').src = '../view/introductionPage.html';
                 } else {
-                    window.location.href = 'view/introductionPage.html';
+                    window.location.href = '../view/introductionPage.html';
                 }
             }, 500);
         }

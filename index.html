@@ -29,37 +29,37 @@
         let bgm = new Audio(audioSrc);
         bgm.loop = true;
 
-        // 1. Periksa apakah ada catatan detik terakhir dari halaman sebelumnya
+        // 1. Periksa apakah ada catatan detik terakhir dari halaman sebelumnya jika user kembali ke menu utama
         const savedTime = localStorage.getItem('bgm_current_time');
         if (savedTime) {
             bgm.currentTime = parseFloat(savedTime);
         }
 
-        // 2. Browser melarang autoplay musik sebelum user klik sesuatu.
-        // Jadi, kita jalankan audionya begitu user berinteraksi dengan halaman.
+        // 2. Mengatasi kebijakan Autoplay Sandbox Browser:
+        // Audio akan mulai diputar otomatis saat user menyentuh atau mengklik area mana saja di landing page.
         function startBGM() {
             if (bgm.paused) {
-                bgm.play().catch(err => console.log("Menunggu interaksi user untuk audio:", err));
+                bgm.play().catch(err => console.log("Menunggu interaksi user untuk memicu audio:", err));
             }
         }
         window.addEventListener('click', startBGM, { once: true });
         window.addEventListener('touchstart', startBGM, { once: true });
 
-        // 3. Simpan detik audio ke localStorage secara berkala (setiap 200 milidetik)
+        // 3. Rekam kemajuan durasi lagu ke dalam localStorage secara berkala setiap 200ms
         setInterval(() => {
             if (!bgm.paused) {
                 localStorage.setItem('bgm_current_time', bgm.currentTime);
             }
         }, 200);
 
-        // 4. Cadangan darurat: Simpan detik audio tepat sebelum pindah halaman atau refresh
+        // 4. Cadangan aman: Paksa penyimpanan durasi track saat window menerima trigger unload / refresh
         window.addEventListener('beforeunload', () => {
             localStorage.setItem('bgm_current_time', bgm.currentTime);
         });
 
         // --- FUNGSI NAVIGASI PINDAH HALAMAN ---
         function goToIntro() {
-            // Pastikan posisi detik tersimpan dengan pas sebelum navigasi terjadi
+            // Mengunci durasi lagu yang sedang berjalan sebelum halaman berganti
             localStorage.setItem('bgm_current_time', bgm.currentTime);
 
             document.body.style.opacity = '0';

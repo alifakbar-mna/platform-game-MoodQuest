@@ -2,39 +2,345 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoodQuest - Introduction</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Angry Emotion Games - Gameplay</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="../css/introduction-style.css">
+    <link rel="stylesheet" href="../css/pageEmote_Angry-style.css">
+    <style>
+        /* CSS Tambahan Langsung untuk Kursor Virtual yang Mengikuti Mouse/Jari di HP */
+        .custom-cursor-follower {
+            position: fixed;
+            width: 50px;  
+            height: 50px;
+            background-image: url('../image/angry/cursor.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none; 
+            z-index: 99999; 
+            transform: translate(-50%, -50%); 
+            display: none; 
+        }
+
+        /* INDIKATOR VISUAL KEMENANGAN */
+        .win-announcement {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 99995;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .win-announcement.show-win {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .win-text-main {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 36px;
+            color: #4ade80;
+            text-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+            margin-bottom: 20px;
+            text-align: center;
+            animation: pulseText 1s infinite alternate;
+        }
+
+        .win-text-sub {
+            font-size: 16px;
+            color: #e2e8f0;
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        @keyframes pulseText {
+            from { transform: scale(0.95); filter: brightness(0.9); }
+            to { transform: scale(1.05); filter: brightness(1.2); }
+        }
+
+        @media (max-width: 768px) {
+            .win-text-main { font-size: 22px; }
+            .win-text-sub { font-size: 12px; }
+            .custom-cursor-follower { width: 40px; height: 40px; }
+        }
+    </style>
 </head>
 <body>
+    <div id="custom-cursor" class="custom-cursor-follower"></div>
 
-    <div class="intro-wrapper">
-        <div class="cloud-bubble">
-            <div class="star-decoration">✦</div>
+    <div id="winOverlay" class="win-announcement">
+        <p class="win-text-main">YOU WIN!</p>
+        <p class="win-text-sub">Membuka halaman penghargaan...</p>
+    </div>
 
-            <h2 class="intro-title">Welcome to<br>Mood Quest!</h2>
-            
-            <p class="intro-text">Hi, I'm Mooru, your emotional sidekick!</p>
-            
-            <div class="dots">. . .</div>
-            
-            <p class="intro-text">Let's unravel those feelings and conquer today together!</p>
+    <div id="pauseOverlay" class="pause-overlay" onclick="togglePause()">
+        <div class="pause-content">
+            <p class="pause-title">GAME PAUSED</p>
+            <p class="pause-sub">Klik di mana saja untuk melanjutkan</p>
+        </div>
+    </div>
+    
+    <div class="game-container" id="arena-container">
+        <button class="pause-btn" onclick="event.stopPropagation(); togglePause();" title="Pause">
+            <span class="pause-icon">||</span>
+        </button>
+        
+        <div class="game-hud">
+            <div>SCORE: <span id="score-val">0</span></div>
+            <div>WAVE: <span id="wave-val">1/3</span></div>
         </div>
 
-        <button class="next-btn" onclick="goToHome()">NEXT</button>
+        <div class="fire-queue" id="fire-queue-container">
+            <img src="../image/angry/fire1.gif" class="queue-item" id="q-fire1" alt="Fire 1">
+            <img src="../image/angry/fire2.gif" class="queue-item" id="q-fire2" alt="Fire 2">
+            <img src="../image/angry/fire3.gif" class="queue-item" id="q-fire3" alt="Fire 3">
+        </div>
+
+        <div id="battle-arena" class="battle-arena"></div>
+
+        <div class="mooru-angry-wrapper" id="mooru-container">
+            <img src="../image/angry/mooru-angry.png" class="mooru-asset" id="mooru-asset" alt="Mooru Angry">
+        </div>
     </div>
 
     <script>
-        function goToHome() {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => {
-                window.location.href = '../view/homePage.html';
-            }, 500);
+        const arena = document.getElementById('battle-arena');
+        const container = document.getElementById('arena-container');
+        const mooru = document.getElementById('mooru-container');
+        const mooruAsset = document.getElementById('mooru-asset');
+        const pauseOverlay = document.getElementById('pauseOverlay');
+        const winOverlay = document.getElementById('winOverlay');
+        const queueContainer = document.getElementById('fire-queue-container');
+        const customCursor = document.getElementById('custom-cursor');
+
+        let score = 0;
+        let currentWave = 1;
+        let gameActive = true;
+        let isPaused = false;
+        
+        let demons = [];
+        let projectiles = [];
+        let spawnTimer = 0;
+        let currentFireIndex = 1;
+
+        const waveConfigs = {
+            1: { targetScore: 50, speed: 0.005, spawnRate: 120 },  
+            2: { targetScore: 100, speed: 0.008, spawnRate: 90 },
+            3: { targetScore: 200, speed: 0.012, spawnRate: 60 }
+        };
+
+        const explosionImages = ['../image/angry/explosion1.gif', '../image/angry/explosion2.gif'];
+        const fireImages = { 1: '../image/angry/fire1.gif', 2: '../image/angry/fire2.gif', 3: '../image/angry/fire3.gif' };
+
+        // --- SISTEM PELACAKAN KURSOR VIRTUAL (HP KHUSUS TOUCHMOVE) ---
+        function moveCursor(e) {
+            if (!gameActive || isPaused) {
+                customCursor.style.display = 'none';
+                return;
+            }
+            
+            // Aktifkan kursor visual buatan hanya ketika disentuh di perangkat HP
+            if (e.touches || window.innerWidth <= 768) {
+                customCursor.style.display = 'block';
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                customCursor.style.left = `${clientX}px`;
+                customCursor.style.top = `${clientY}px`;
+            }
         }
+
+        window.addEventListener('mousemove', moveCursor);
+        window.addEventListener('touchmove', moveCursor, { passive: true });
+        window.addEventListener('touchstart', moveCursor, { passive: true });
+
+        function updateFireQueueVisual() {
+            const f1 = document.getElementById('q-fire1');
+            const f2 = document.getElementById('q-fire2');
+            const f3 = document.getElementById('q-fire3');
+            
+            if (currentFireIndex === 1) {
+                f1.className = "queue-item active-fire"; f2.className = "queue-item next-fire"; f3.className = "queue-item reserve-fire";
+            } else if (currentFireIndex === 2) {
+                f2.className = "queue-item active-fire"; f3.className = "queue-item next-fire"; f1.className = "queue-item reserve-fire";
+            } else {
+                f3.className = "queue-item active-fire"; f1.className = "queue-item next-fire"; f2.className = "queue-item reserve-fire";
+            }
+        }
+
+        function spawnDemon() {
+            if (!gameActive || isPaused) return;
+            const el = document.createElement('img');
+            el.src = '../image/angry/demon.png';
+            el.classList.add('game-entity');
+            arena.appendChild(el);
+
+            const startX = Math.random() * 60 + 20; 
+            const startY = 25; 
+
+            demons.push({
+                element: el, progress: 0, startX: startX, startY: startY,
+                endX: startX + (Math.random() * 20 - 10), endY: 82, size: 0, x: startX, y: startY
+            });
+        }
+
+        function handleShoot(clientX, clientY) {
+            if (!gameActive || isPaused) return;
+
+            const rect = arena.getBoundingClientRect();
+            const targetX = clientX - rect.left;
+            const targetY = clientY - rect.top;
+
+            const mooruRect = mooru.getBoundingClientRect();
+            const startX = (mooruRect.left + mooruRect.width / 2) - rect.left;
+            const startY = (mooruRect.top + 20) - rect.top;
+
+            const angle = Math.atan2(targetX - startX, startY - targetY) * (180 / Math.PI);
+            mooruAsset.style.transform = `scale(1.1) rotate(${angle * 0.3}deg)`;
+            setTimeout(() => { mooruAsset.style.transform = 'scale(1) rotate(0deg)'; }, 200);
+
+            const pEl = document.createElement('img');
+            pEl.src = fireImages[currentFireIndex];
+            pEl.classList.add('game-entity', 'projectile-fire');
+            arena.appendChild(pEl);
+
+            // Sesuaikan kecepatan peluru di desktop vs mobile
+            const speedConfig = window.innerWidth <= 768 ? 12 : 16;
+
+            projectiles.push({
+                element: pEl, x: startX, y: startY, tx: targetX, ty: targetY, speed: speedConfig, alive: true
+            });
+
+            currentFireIndex = currentFireIndex === 3 ? 1 : currentFireIndex + 1;
+            updateFireQueueVisual();
+        }
+
+        // Event listener klik pendeteksi tembakan komputer
+        container.addEventListener('click', (e) => {
+            if (e.target.closest('.pause-btn') || e.target.closest('.pause-overlay')) return; 
+            handleShoot(e.clientX, e.clientY);
+        });
+
+        // Event listener touch pendeteksi tembakan smartphone layar sentuh
+        container.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.pause-btn') || e.target.closest('.pause-overlay')) return;
+            const tX = e.touches[0].clientX;
+            const tY = e.touches[0].clientY;
+            handleShoot(tX, tY);
+        }, { passive: true });
+
+        // --- GAME LOOP UTAMA ---
+        function updateGame() {
+            if (gameActive && !isPaused) {
+                const config = waveConfigs[currentWave];
+                spawnTimer++;
+                if (spawnTimer >= config.spawnRate) {
+                    spawnDemon();
+                    spawnTimer = 0;
+                }
+
+                // Pengali skala monster berdasarkan resolusi viewport layar HP / PC
+                const baseMinSize = window.innerWidth <= 768 ? 20 : 30;
+                const baseMaxSize = window.innerWidth <= 768 ? 70 : 120;
+
+                for (let i = demons.length - 1; i >= 0; i--) {
+                    let d = demons[i]; d.progress += config.speed;
+                    d.x = d.startX + (d.endX - d.startX) * d.progress;
+                    d.y = d.startY + (d.endY - d.startY) * d.progress;
+                    
+                    const currentSize = baseMinSize + (baseMaxSize * d.progress); 
+                    d.element.style.width = `${currentSize}px`;
+                    d.element.style.height = `${currentSize}px`;
+                    d.element.style.left = `calc(${d.x}% - ${currentSize/2}px)`;
+                    d.element.style.top = `calc(${d.y}% - ${currentSize/2}px)`;
+                    d.element.style.opacity = 0.2 + (0.8 * d.progress);
+
+                    if (d.progress >= 1) {
+                        d.element.remove(); demons.splice(i, 1);
+                        updateScore(-15); 
+                    }
+                }
+
+                for (let i = projectiles.length - 1; i >= 0; i--) {
+                    let p = projectiles[i];
+                    const dx = p.tx - p.x; const dy = p.ty - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist > p.speed) {
+                        p.x += (dx / dist) * p.speed; p.y += (dy / dist) * p.speed;
+                        p.element.style.left = `${p.x}px`; p.element.style.top = `${p.y}px`;
+
+                        for (let j = demons.length - 1; j >= 0; j--) {
+                            let d = demons[j];
+                            const dLeft = d.element.offsetLeft; const dTop = d.element.offsetTop; const dSize = d.element.clientWidth;
+                            const dCenterX = dLeft + dSize / 2; const dCenterY = dTop + dSize / 2;
+                            const hitDist = Math.sqrt(Math.pow(p.x - dCenterX, 2) + Math.pow(p.y - dCenterY, 2));
+                            
+                            if (hitDist < (dSize / 1.4)) {
+                                createExplosion(dCenterX, dCenterY);
+                                d.element.remove(); demons.splice(j, 1);
+                                p.element.remove(); p.alive = false; projectiles.splice(i, 1);
+                                updateScore(10); break;
+                            }
+                        }
+                    } else {
+                        if (p.alive) { p.element.remove(); projectiles.splice(i, 1); }
+                    }
+                }
+            }
+            requestAnimationFrame(updateGame);
+        }
+
+        function createExplosion(x, y) {
+            const exp = document.createElement('img');
+            const randomGif = explosionImages[Math.floor(Math.random() * explosionImages.length)];
+            exp.src = randomGif + '?t=' + Date.now(); 
+            exp.classList.add('game-entity', 'explosion-effect');
+            exp.style.left = `${x - (window.innerWidth <= 768 ? 25 : 40)}px`; 
+            exp.style.top = `${y - (window.innerWidth <= 768 ? 25 : 40)}px`;
+            arena.appendChild(exp);
+            setTimeout(() => { exp.remove(); }, 600); 
+        }
+
+        function updateScore(amount) {
+            score += amount; if (score < 0) score = 0;
+            document.getElementById('score-val').innerText = score;
+            const config = waveConfigs[currentWave];
+            
+            if (score >= config.targetScore) {
+                if (currentWave < 3) {
+                    currentWave++;
+                    document.getElementById('wave-val').innerText = currentWave + '/3';
+                    demons.forEach(d => d.element.remove()); demons = [];
+                } else {
+                    gameActive = false;
+                    demons.forEach(d => d.element.remove());
+                    projectiles.forEach(p => p.element.remove());
+                    demons = []; projectiles = [];
+
+                    customCursor.style.display = 'none';
+                    winOverlay.classList.add('show-win');
+
+                    setTimeout(() => {
+                        window.location.href = '../view/pageEmote_Angry2.html';
+                    }, 2000);
+                }
+            }
+        }
+
+        function togglePause() {
+            if (!gameActive) return;
+            isPaused = !isPaused;
+            if (isPaused) { pauseOverlay.classList.add('active'); customCursor.style.display = 'none'; } 
+            else { pauseOverlay.classList.remove('active'); }
+        }
+
+        updateFireQueueVisual();
+        requestAnimationFrame(updateGame);
     </script>
 </body>
 </html>

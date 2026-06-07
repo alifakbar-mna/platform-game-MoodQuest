@@ -4,14 +4,23 @@
     box-sizing: border-box;
 }
 
-body {
-    overflow: hidden;
-    background-color: #0b0914;
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+    position: fixed;
+    touch-action: none;
     user-select: none;
+    -webkit-user-select: none;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #0b0914;
 }
 
 /* ==========================================================================
-   GAME CONTAINER & KURSOR RETICLE KUSTOM (`cursor.png`)
+   GAME CONTAINER & LAPTOP DEFAULT CROSSHAIR CURSOR
    ========================================================================== */
 .game-container {
     position: relative;
@@ -20,12 +29,9 @@ body {
     background-image: url('../image/angry/bg.png');
     background-size: cover;
     background-position: center;
-    
-    /* Mengubah kursor standar laptop/PC menjadi gambar target bidikan */
     cursor: url('../image/angry/cursor.png') 16 16, crosshair, pointer;
 }
 
-/* Mengunci area pertempuran entitas */
 .battle-arena {
     position: absolute;
     width: 100%;
@@ -33,18 +39,18 @@ body {
     top: 0;
     left: 0;
     z-index: 5;
-    pointer-events: none; /* Klik tembakan tembus langsung ke kontainer dasar */
+    pointer-events: none; 
 }
 
 .game-entity {
     position: absolute;
     transform-origin: center center;
     pointer-events: none;
-    will-change: transform, left, top, opacity; /* Optimalisasi performa GPU render halus */
+    will-change: transform, left, top, opacity;
 }
 
 /* ==========================================================================
-   HUD & TOMBOL PAUSE AWAN ORIGINAL (KIRI BAWAH & KANAN ATAS)
+   DESAIN ASLI LAPTOP (TIDAK BERUBAH)
    ========================================================================== */
 .game-hud {
     position: absolute;
@@ -52,7 +58,6 @@ body {
     left: 20px;
     top: auto;
     right: auto;
-    
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 10px 20px;
@@ -69,7 +74,6 @@ body {
     bottom: auto;
     left: auto;
     z-index: 200;
-
     background: rgba(255, 255, 255, 0.95);
     border: none;
     width: 65px;
@@ -92,19 +96,8 @@ body {
     z-index: -1 !important; 
 }
 
-.pause-btn::before {
-    width: 30px;
-    height: 30px;
-    top: -12px;
-    left: 10px;
-}
-
-.pause-btn::after {
-    width: 25px;
-    height: 25px;
-    top: -6px;
-    right: 8px;
-}
+.pause-btn::before { width: 30px; height: 30px; top: -12px; left: 10px; }
+.pause-btn::after { width: 25px; height: 25px; top: -6px; right: 8px; }
 
 .pause-icon {
     font-family: 'Press Start 2P', monospace, sans-serif;
@@ -115,11 +108,6 @@ body {
     letter-spacing: 0px;
 }
 
-/* ==========================================================================
-   ENTITAS AMUNISI, PROYEKTIL & MASKOT MOORU ANGRY
-   ========================================================================== */
-
-/* Posisi Tempat Maskot Mooru Tampak Belakang */
 .mooru-angry-wrapper {
     position: absolute;
     bottom: 0px;
@@ -138,7 +126,6 @@ body {
     transition: transform 0.1s linear;
 }
 
-/* Proyektil Api Meluncur */
 .projectile-fire {
     width: 45px;
     height: 45px;
@@ -146,11 +133,10 @@ body {
     z-index: 30;
 }
 
-/* Antrean Tampilan Amunisi di Sebelah Kanan Mooru */
 .fire-queue {
     position: absolute;
     bottom: 25px;
-    left: calc(50% + 130px); /* Berdiri pas di kanan pundak Mooru */
+    left: calc(50% + 130px); 
     display: flex;
     align-items: flex-end;
     gap: 12px;
@@ -168,7 +154,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* Visualisasi pergantian antrean peluru bergeser */
 .active-fire {
     width: 45px;
     height: 45px;
@@ -177,21 +162,9 @@ body {
     filter: drop-shadow(0 0 8px #ff7a00);
 }
 
-.next-fire {
-    width: 32px;
-    height: 32px;
-    opacity: 0.7;
-    transform: scale(1);
-}
+.next-fire { width: 32px; height: 32px; opacity: 0.7; transform: scale(1); }
+.reserve-fire { width: 22px; height: 22px; opacity: 0.3; transform: scale(0.7); }
 
-.reserve-fire {
-    width: 22px;
-    height: 22px;
-    opacity: 0.3;
-    transform: scale(0.7);
-}
-
-/* Efek Ledakan */
 .explosion-effect {
     width: 80px;
     height: 80px;
@@ -199,9 +172,6 @@ body {
     z-index: 40;
 }
 
-/* ==========================================================================
-   PAUSE OVERLAY STYLING
-   ========================================================================== */
 .pause-overlay {
     position: fixed;
     inset: 0;
@@ -217,10 +187,7 @@ body {
     transition: opacity 0.3s ease;
 }
 
-.pause-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+.pause-overlay.active { opacity: 1; pointer-events: auto; }
 
 .pause-content {
     text-align: center;
@@ -231,14 +198,64 @@ body {
     box-shadow: 0 20px 50px rgba(0,0,0,0.7);
 }
 
-.pause-title {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 20px;
-    color: #ff4a4a;
-    margin-bottom: 15px;
-}
+.pause-title { font-family: 'Press Start 2P', cursive; font-size: 20px; color: #ff4a4a; margin-bottom: 15px; }
+.pause-sub { font-size: 14px; color: #a5a1b8; }
 
-.pause-sub {
-    font-size: 14px;
-    color: #a5a1b8;
+/* ==========================================================================
+   MEDIA QUERY: PENYESUAIAN RESPONSIVE ELEMEN DI SMARTPHONE (HP)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .game-container {
+        /* Sembunyikan kursor standar bawaan di HP agar lingkaran target buatan tidak ganda */
+        cursor: none !important; 
+    }
+
+    /* Ukuran Tombol Cloud Pause Diperkecil Harmonis */
+    .pause-btn {
+        width: 46px;
+        height: 32px;
+        top: 15px;
+        right: 15px;
+    }
+    .pause-btn::before { width: 22px; height: 22px; top: -9px; left: 6px; }
+    .pause-btn::after { width: 18px; height: 18px; top: -5px; right: 5px; }
+    .pause-icon { font-size: 10px; }
+
+    /* HUD Nilai Skor Diperkecil */
+    .game-hud {
+        bottom: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* Ukuran Maskot Mooru Tampak Belakang Menyesuaikan Layar Lebar Ponsel */
+    .mooru-angry-wrapper {
+        width: 120px;
+        bottom: 0px;
+    }
+
+    /* Memposisikan dan Mengecilkan Antrean Amunisi di Sebelah Kanan Mooru HP */
+    .fire-queue {
+        bottom: 12px;
+        left: calc(50% + 65px); 
+        gap: 6px;
+        height: 45px;
+    }
+
+    .queue-item { width: 14px; height: 14px; }
+    .active-fire { width: 26px; height: 26px; }
+    .next-fire { width: 18px; height: 18px; }
+    .reserve-fire { width: 12px; height: 12px; }
+
+    /* Proyektil Api & Ledakan Efek Ukuran Mobile */
+    .projectile-fire {
+        width: 25px;
+        height: 25px;
+    }
+
+    .explosion-effect {
+        width: 50px;
+        height: 50px;
+    }
 }

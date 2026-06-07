@@ -39,14 +39,20 @@
             bgm.currentTime = parseFloat(savedTime);
         }
 
-        // 2. Lanjutkan pemutaran audio begitu mendeteksi interaksi user di halaman ini
+        // 2. Lanjutkan pemutaran audio secara otomatis jika izin browser sudah didapatkan dari index.html.
+        // Jika belum (misal user langsung mengakses halaman ini via URL), audio akan menunggu interaksi klik pertama.
         function continueBGM() {
             if (bgm.paused) {
-                bgm.play().catch(err => console.log("Menunggu interaksi untuk melanjutkan audio:", err));
+                bgm.play().catch(err => console.log("Menunggu interaksi pengguna untuk melanjutkan audio:", err));
             }
         }
-        window.addEventListener('click', continueBGM, { once: true });
-        window.addEventListener('touchstart', continueBGM, { once: true });
+        
+        // Langsung coba putar saat halaman dimuat
+        bgm.play().catch(() => {
+            // Jika diblokir oleh browser karena user bypass index.html, pasang event listener cadangan
+            window.addEventListener('click', continueBGM, { once: true });
+            window.addEventListener('touchstart', continueBGM, { once: true });
+        });
 
         // 3. Sinkronisasikan durasi musik ke localStorage secara berkala (setiap 200 milidetik)
         setInterval(() => {
@@ -55,14 +61,14 @@
             }
         }, 200);
 
-        // 4. Cadangan: Simpan durasi audio jika user langsung me-refresh halaman
+        // 4. Cadangan aman: Simpan durasi audio jika user melakukan refresh halaman secara tidak sengaja
         window.addEventListener('beforeunload', () => {
             localStorage.setItem('bgm_current_time', bgm.currentTime);
         });
 
-        // --- FUNGSI NAVIGASI PINDAH HALAMAN ---
+        // --- FUNGSI NAVIGASI PINDAH HALAMAN (SINKRONISASI TOTAL) ---
         function goToHome() {
-            // Kunci posisi detik terakhir sebelum berpindah ke homePage.html
+            // Kunci posisi detik terakhir ke localStorage sesaat sebelum berpindah halaman
             localStorage.setItem('bgm_current_time', bgm.currentTime);
 
             document.body.style.opacity = '0';

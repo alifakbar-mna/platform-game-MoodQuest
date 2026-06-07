@@ -23,18 +23,21 @@
 
     <script>
         function goToHome() {
+
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
-            
+
             setTimeout(() => {
-                // Mengganti halaman dalam iframe induk ke halaman berikutnya (homePage.html)
+
                 if (window.parent && window.parent.document.getElementById('game-viewport')) {
-                    window.parent.document.getElementById('game-viewport').src = '..view/homePage.html'; // Sesuaikan path jika di dalam folder view
+                    window.parent.document.getElementById('game-viewport').src = './homePage.html';
                 } else {
-                    window.location.href = '../view/homePage.html';
+                    window.location.href = './homePage.html';
                 }
+
             }, 500);
         }
     </script>
+
 </body>
 </html>

@@ -19,22 +19,22 @@
     <script>
         const bgm = document.getElementById('global-bgm');
 
-        // Fungsi global untuk memainkan musik (dipanggil saat tombol play di index.html diklik)
-        function playGlobalMusic() {
+        // WAJIB: expose ke window agar bisa diakses iframe
+        window.playGlobalMusic = function () {
             if (bgm.paused) {
-                // Siasat memaksa load ulang aset jika memori audio sempat ter-suspend oleh browser
-                bgm.load(); 
-                
-                bgm.play()
-                   .then(() => console.log("BGM Berhasil Berputar!"))
-                   .catch(err => console.error("Eror Autoplay Browser:", err));
-            }
-        }
+                bgm.load();
+                bgm.volume = 1;
 
-        // Fungsi global untuk menjeda musik (misal saat game dipause)
-        function pauseGlobalMusic() {
+                bgm.play()
+                    .then(() => console.log("BGM Berhasil Berputar!"))
+                    .catch(err => console.error("Eror Autoplay Browser:", err));
+            }
+        };
+
+        window.pauseGlobalMusic = function () {
             bgm.pause();
-        }
+        };
     </script>
+
 </body>
 </html>

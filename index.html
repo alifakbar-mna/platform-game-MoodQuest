@@ -25,43 +25,58 @@
 
     <script>
         // --- KONFIGURASI AUDIO GLOBAL AUDIO PERSISTENT ---
+        // PENTING: Jika index.html berada di folder paling luar (sejajar folder audio),
+        // ubah path di bawah ini menjadi "audio/music-bg.mp3" (tanpa tanda ../)
         const audioSrc = "../audio/music-bg.mp3";
         let bgm = new Audio(audioSrc);
         bgm.loop = true;
 
-        // 1. Periksa apakah ada catatan detik terakhir dari halaman sebelumnya jika user kembali ke menu utama
+        // 1. Ambil data detik terakhir jika ada pemutaran sebelumnya
         const savedTime = localStorage.getItem('bgm_current_time');
         if (savedTime) {
             bgm.currentTime = parseFloat(savedTime);
         }
 
-        // 2. Mengatasi kebijakan Autoplay Sandbox Browser:
-        // Audio akan mulai diputar otomatis saat user menyentuh atau mengklik area mana saja di landing page.
+        // 2. Fungsi pemicu utama untuk memulai audio saat interaksi bebas di layar
+         Lah langkah antisipasi browser autoplay policy
         function startBGM() {
             if (bgm.paused) {
-                bgm.play().catch(err => console.log("Menunggu interaksi user untuk memicu audio:", err));
+                bgm.play().catch(err => console.log("Menunggu klik pengguna untuk memutar suara:", err));
             }
         }
         window.addEventListener('click', startBGM, { once: true });
         window.addEventListener('touchstart', startBGM, { once: true });
 
-        // 3. Rekam kemajuan durasi lagu ke dalam localStorage secara berkala setiap 200ms
+        // 3. Simpan posisi detik lagu ke localStorage secara berkala setiap 200 milidetik
         setInterval(() => {
             if (!bgm.paused) {
                 localStorage.setItem('bgm_current_time', bgm.currentTime);
             }
         }, 200);
 
-        // 4. Cadangan aman: Paksa penyimpanan durasi track saat window menerima trigger unload / refresh
+        // 4. Cadangan darurat jika halaman di-refresh secara paksa
         window.addEventListener('beforeunload', () => {
             localStorage.setItem('bgm_current_time', bgm.currentTime);
         });
 
-        // --- FUNGSI NAVIGASI PINDAH HALAMAN ---
+        // --- FUNGSI NAVIGASI PINDAH HALAMAN (PERBAIKAN TOTAL AUDIO) ---
         function goToIntro() {
-            // Mengunci durasi lagu yang sedang berjalan sebelum halaman berganti
-            localStorage.setItem('bgm_current_time', bgm.currentTime);
+            // Memaksa audio berputar atau memastikan statusnya aktif lewat klik tombol ini
+            if (bgm.paused) {
+                bgm.play().then(() => {
+                    localStorage.setItem('bgm_current_time', bgm.currentTime);
+                    eksekusiPindahHalaman();
+                }).catch(err => {
+                    console.log("Audio diblokir oleh sistem browser:", err);
+                    eksekusiPindahHalaman(); // Tetap pindah jika ada kegagalan media perangkat
+                });
+            } else {
+                localStorage.setItem('bgm_current_time', bgm.currentTime);
+                eksekusiPindahHalaman();
+            }
+        }
 
+        function eksekusiPindahHalaman() {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
             setTimeout(() => {

@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoodQuest - Introduction</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="../css/introduction-style.css">
 </head>
 <body>
@@ -14,13 +12,9 @@
     <div class="intro-wrapper">
         <div class="cloud-bubble">
             <div class="star-decoration">✦</div>
-
             <h2 class="intro-title">Welcome to<br>Mood Quest!</h2>
-            
             <p class="intro-text">Hi, I'm Mooru, your emotional sidekick!</p>
-            
             <div class="dots">. . .</div>
-            
             <p class="intro-text">Let's unravel those feelings and conquer today together!</p>
         </div>
 
@@ -28,53 +22,17 @@
     </div>
 
     <script>
-        // --- KONFIGURASI AUDIO GLOBAL AUDIO PERSISTENT ---
-        const audioSrc = "../audio/music-bg.mp3";
-        let bgm = new Audio(audioSrc);
-        bgm.loop = true;
-
-        // 1. Ambil data detik terakhir yang disimpan oleh index.html
-        const savedTime = localStorage.getItem('bgm_current_time');
-        if (savedTime) {
-            bgm.currentTime = parseFloat(savedTime);
-        }
-
-        // 2. Lanjutkan pemutaran audio secara otomatis jika izin browser sudah didapatkan dari index.html.
-        // Jika belum (misal user langsung mengakses halaman ini via URL), audio akan menunggu interaksi klik pertama.
-        function continueBGM() {
-            if (bgm.paused) {
-                bgm.play().catch(err => console.log("Menunggu interaksi pengguna untuk melanjutkan audio:", err));
-            }
-        }
-        
-        // Langsung coba putar saat halaman dimuat
-        bgm.play().catch(() => {
-            // Jika diblokir oleh browser karena user bypass index.html, pasang event listener cadangan
-            window.addEventListener('click', continueBGM, { once: true });
-            window.addEventListener('touchstart', continueBGM, { once: true });
-        });
-
-        // 3. Sinkronisasikan durasi musik ke localStorage secara berkala (setiap 200 milidetik)
-        setInterval(() => {
-            if (!bgm.paused) {
-                localStorage.setItem('bgm_current_time', bgm.currentTime);
-            }
-        }, 200);
-
-        // 4. Cadangan aman: Simpan durasi audio jika user melakukan refresh halaman secara tidak sengaja
-        window.addEventListener('beforeunload', () => {
-            localStorage.setItem('bgm_current_time', bgm.currentTime);
-        });
-
-        // --- FUNGSI NAVIGASI PINDAH HALAMAN (SINKRONISASI TOTAL) ---
         function goToHome() {
-            // Kunci posisi detik terakhir ke localStorage sesaat sebelum berpindah halaman
-            localStorage.setItem('bgm_current_time', bgm.currentTime);
-
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
+            
             setTimeout(() => {
-                window.location.href = '../view/homePage.html';
+                // Mengganti halaman dalam iframe induk ke halaman berikutnya (homePage.html)
+                if (window.parent && window.parent.document.getElementById('game-viewport')) {
+                    window.parent.document.getElementById('game-viewport').src = 'homePage.html'; // Sesuaikan path jika di dalam folder view
+                } else {
+                    window.location.href = 'homePage.html';
+                }
             }, 500);
         }
     </script>
